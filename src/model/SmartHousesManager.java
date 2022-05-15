@@ -14,10 +14,12 @@ import java.util.Map;
 public class SmartHousesManager implements Serializable {
     private final Map<String, SmartHouse> smartHousesByTIN;
     private final Map<String, EnergySupplier> energySuppliers;
+    private LocalDate date;
 
     public SmartHousesManager() {
         smartHousesByTIN = new HashMap<>();
         energySuppliers = new HashMap<>();
+        date = LocalDate.now();
     }
 
     public static SmartHousesManager fromFile(String filepath) throws IOException {
@@ -46,15 +48,18 @@ public class SmartHousesManager implements Serializable {
         smartHouse.addSmartDevice(division, smartDevice);
     }
 
-    public void emitInvoices(int numDays) {
+    public void skipDays(int numDays) {
+        date = date.plusDays(numDays);
+        emitInvoices(numDays);
+    }
+
+    private void emitInvoices(int numDays) {
         for (SmartHouse smartHouse : smartHousesByTIN.values()) {
             // we assume the energy supplier exists in the map because we assure it exists on house insertion.
             EnergySupplier energySupplier = energySuppliers.get(smartHouse.getEnergySupplierName());
             float dailyConsumption = smartHouse.getEnergyConsumption();
             float energyCost = energySupplier.energyCost(smartHouse.getNumDevices(), dailyConsumption) * numDays;
-            // FIXME Aqui teremos q por a data na qual nos encontramos
-            smartHouse.addInvoice(new Invoice(numDays, dailyConsumption, energyCost,
-                    LocalDate.now(), energySupplier.getName()));
+            smartHouse.addInvoice(new Invoice(numDays, dailyConsumption, energyCost, date, energySupplier.getName()));
         }
     }
 
