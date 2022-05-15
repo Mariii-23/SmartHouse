@@ -1,4 +1,4 @@
-package smart_house;
+package model.smart_house;
 
 public class Invoice {
     private final int numberOfDays;

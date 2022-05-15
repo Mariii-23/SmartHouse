@@ -1,4 +1,4 @@
-package smart_house.smart_devices.bulb;
+package model.smart_house.smart_devices.bulb;
 
 public enum Tone {
     WARM(1),
