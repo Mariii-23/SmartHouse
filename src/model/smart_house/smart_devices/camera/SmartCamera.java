@@ -2,7 +2,9 @@ package model.smart_house.smart_devices.camera;
 
 import model.smart_house.smart_devices.SmartDevice;
 
-public class SmartCamera extends SmartDevice {
+import java.io.Serializable;
+
+public class SmartCamera extends SmartDevice implements Serializable {
     private final int width;
     private final int height;
     private final float fileSize;

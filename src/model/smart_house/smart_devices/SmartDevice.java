@@ -1,6 +1,8 @@
 package model.smart_house.smart_devices;
 
-public abstract class SmartDevice {
+import java.io.Serializable;
+
+public abstract class SmartDevice implements Serializable {
     protected final float fixedConsumption;
     private boolean on;
 

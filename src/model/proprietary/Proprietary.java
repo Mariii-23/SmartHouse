@@ -1,6 +1,8 @@
 package model.proprietary;
 
-public class Proprietary {
+import java.io.Serializable;
+
+public class Proprietary implements Serializable {
     private final String name;
     private final String tin;
 

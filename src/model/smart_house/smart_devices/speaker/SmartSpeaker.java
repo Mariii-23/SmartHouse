@@ -2,7 +2,9 @@ package model.smart_house.smart_devices.speaker;
 
 import model.smart_house.smart_devices.SmartDevice;
 
-public class SmartSpeaker extends SmartDevice {
+import java.io.Serializable;
+
+public class SmartSpeaker extends SmartDevice implements Serializable {
     public static final int MAX = 100;
     public static final int MIN = 0;
 

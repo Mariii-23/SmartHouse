@@ -1,6 +1,8 @@
 package model.energy_suppliers.energy_plans;
 
-public class BigHousePlan extends EnergyPlan {
+import java.io.Serializable;
+
+public class BigHousePlan extends EnergyPlan implements Serializable  {
 
     public float energyCost(int numDevices, float devicesConsumption) {
         return numDevices > 10

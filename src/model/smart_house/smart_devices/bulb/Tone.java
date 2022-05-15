@@ -1,6 +1,8 @@
 package model.smart_house.smart_devices.bulb;
 
-public enum Tone {
+import java.io.Serializable;
+
+public enum Tone implements Serializable {
     WARM(1),
     NEUTRAL(2),
     COLD(3);

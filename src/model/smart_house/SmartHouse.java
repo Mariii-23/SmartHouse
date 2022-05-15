@@ -3,12 +3,13 @@ package model.smart_house;
 import model.proprietary.Proprietary;
 import model.smart_house.smart_devices.SmartDevice;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-public class SmartHouse {
+public class SmartHouse implements Serializable {
     private final Proprietary proprietary;
     private final Map<String, Division> divisionsByName;
     private String energySupplier;

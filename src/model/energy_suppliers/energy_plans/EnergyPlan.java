@@ -1,6 +1,8 @@
 package model.energy_suppliers.energy_plans;
 
-public abstract class EnergyPlan {
+import java.io.Serializable;
+
+public abstract class EnergyPlan implements Serializable {
     protected static float baseCost;
     protected static float vat;
 

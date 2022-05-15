@@ -2,7 +2,9 @@ package model.smart_house.smart_devices.bulb;
 
 import model.smart_house.smart_devices.SmartDevice;
 
-public class SmartBulb extends SmartDevice {
+import java.io.Serializable;
+
+public class SmartBulb extends SmartDevice implements Serializable {
     private Tone tone;
     private float diameter;
 
