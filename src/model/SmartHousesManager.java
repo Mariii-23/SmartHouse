@@ -8,10 +8,10 @@ import model.smart_house.smart_devices.SmartDevice;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class SmartHousesManager implements Serializable {
+public class SmartHousesManager implements Serializable, ISmartHouseManager {
     private final Map<String, SmartHouse> smartHousesByTIN;
     private final Map<String, EnergySupplier> energySuppliers;
     private LocalDate date;
@@ -59,8 +59,45 @@ public class SmartHousesManager implements Serializable {
             EnergySupplier energySupplier = energySuppliers.get(smartHouse.getEnergySupplierName());
             float dailyConsumption = smartHouse.getEnergyConsumption();
             float energyCost = energySupplier.energyCost(smartHouse.getNumDevices(), dailyConsumption) * numDays;
-            smartHouse.addInvoice(new Invoice(numDays, dailyConsumption, energyCost, date, energySupplier.getName()));
+            energySupplier.addInvoice(new Invoice(numDays, dailyConsumption, energyCost, date, energySupplier.getName()),
+                    smartHouse.getProprietaryTin());
         }
+    }
+
+    public Optional<Pair<String, Double>> highestProfitSupplier() {
+        return energySuppliers.entrySet()
+                .stream()
+                .map(kv -> new Pair<>(kv.getKey(), kv.getValue().getAmountMoney()))
+                .max(Comparator.comparing(Pair::getSecond));
+        //return energySuppliers.entrySet()
+        //        .stream()
+        //        .max(Comparator.comparing(kv -> kv.getValue().getAmountMoney()))
+        //        .map(kv -> new Pair<>(kv.getKey(), kv.getValue().getAmountMoney()));
+    }
+
+    public Optional<Pair<String, Double>> mostExpensiveHouseBetween(LocalDate startDate, LocalDate endDate) {
+        return energySuppliers.values()
+                .stream()
+                .map(energySupplier -> energySupplier.mostExpensiveHouseBetween(startDate, endDate))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .max(Comparator.comparing(Pair::getSecond));
+    }
+
+    public Set<Invoice> invoicesByEnergySupplier(String energySupplierName) throws EnergySupplierDoesNotExistException {
+        EnergySupplier energySupplier = this.energySuppliers.get(energySupplierName);
+        if (energySupplier == null)
+            throw new EnergySupplierDoesNotExistException("Energy Supplier : " + energySupplierName + " does not exist.");
+        return energySupplier.getAllInvoices();
+    }
+
+    public Set<Pair<String, Double>> energySupplierOrderBetween(LocalDate startDate, LocalDate endDate) {
+        return this.energySuppliers.values()
+                .stream()
+                .map(e-> new Pair<>(e.getName(), e.getAmountMoneyBetween(startDate,endDate)))
+                .sorted((e1, e2) -> (int) (e1.getSecond() - e2.getSecond()))
+                .collect(Collectors.toCollection(LinkedHashSet::new))
+                ;
     }
 
     public static SmartHousesManager readObjectFile(String filename) throws IOException, ClassNotFoundException {

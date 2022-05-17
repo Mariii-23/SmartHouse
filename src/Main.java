@@ -1,21 +1,25 @@
-import model.SmartHousesManager;
-
-import java.io.IOException;
+import control.IState;
+import control.State;
+import view.IIO;
+import view.IO;
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            SmartHousesManager smartHousesManager = SmartHousesManager.fromFile(args[0]);
+        IState state = new State();
+        IIO io = new IO(state);
+        io.run();
+        //try {
+        //    SmartHousesManager smartHousesManager = SmartHousesManager.fromFile(args[0]);
 
-            String filename = "fileObject";
-            System.out.println("Write object file");
-            smartHousesManager.saveObjectFile(filename);
-            System.out.println("Read object file");
-            smartHousesManager = SmartHousesManager.readObjectFile(filename);
-            System.out.println(smartHousesManager);
+        //    String filename = "fileObject";
+        //    System.out.println("Write object file");
+        //    smartHousesManager.saveObjectFile(filename);
+        //    System.out.println("Read object file");
+        //    smartHousesManager = SmartHousesManager.readObjectFile(filename);
+        //    System.out.println(smartHousesManager);
 
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        //} catch (IOException | ClassNotFoundException e) {
+        //    e.printStackTrace();
+        //}
     }
 }

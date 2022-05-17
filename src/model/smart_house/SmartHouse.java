@@ -5,20 +5,16 @@ import model.smart_house.smart_devices.SmartDevice;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 public class SmartHouse implements Serializable {
     private final Proprietary proprietary;
     private final Map<String, Division> divisionsByName;
     private String energySupplier;
-    private final List<Invoice> invoices;
 
     public SmartHouse(Proprietary proprietary, String energySupplier) {
         this.proprietary = proprietary;
         this.divisionsByName = new HashMap<>();
-        this.invoices = new Stack<>();
         this.energySupplier = energySupplier;
     }
 
@@ -45,10 +41,6 @@ public class SmartHouse implements Serializable {
             .stream()
             .mapToDouble(Division::getEnergyConsumption)
             .sum();
-    }
-
-    public void addInvoice(Invoice invoice) {
-        invoices.add(invoice);
     }
 
     public int getNumDevices() {
