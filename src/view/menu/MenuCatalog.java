@@ -49,7 +49,7 @@ public class MenuCatalog<T> {
     }
 
     public Boolean isValid() {
-        return this.option >= 0 && this.option < this.menus.size();
+        return this.option - 1 >= 0 && this.option - 1  < this.menus.size();
     }
 
     public String showMenus() {
@@ -58,17 +58,17 @@ public class MenuCatalog<T> {
         s.append("\n");
         s.append(ANSI_BOLD).append("MENU").append(ANSI_RESET).append("\n");
         for (Menu<T> o : this.menus) {
+            i++;
             s.append("\t").append(ANSI_BOLD).append(i).append(": ").append(ANSI_RESET);
             s.append(o.getDescription());
             s.append("\n");
-            i++;
         }
-        s.append("\t").append(ANSI_BOLD).append(i).append(": ").append(ANSI_RESET).append("Exit\n");
+        s.append("\t").append(ANSI_BOLD).append(0).append(": ").append(ANSI_RESET).append("Exit\n");
         return s.toString();
     }
 
     private Menu<T> getMenu() {
-        return this.menus.get(this.option);
+        return this.menus.get(this.option - 1);
     }
 
     public void run(T that) {
@@ -82,6 +82,6 @@ public class MenuCatalog<T> {
                 menu.runMenu(that);
             }
             IO.printLine("");
-        } while (this.getOption() != this.sizeOption());
+        } while (this.getOption() != 0);
     }
 }

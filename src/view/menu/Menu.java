@@ -97,13 +97,13 @@ public class Menu<T> {
         int i = 0;
         s.append("\n");
         s.append(ANSI_BOLD).append("MENU").append(ANSI_RESET).append("\n");
-        s.append("\t").append(ANSI_BOLD).append(i).append(": ").append(ANSI_RESET).append("Go Back\n");
         for (OptionCommand o : this.options) {
             i++;
             s.append("\t").append(ANSI_BOLD).append(i).append(": ").append(ANSI_RESET);
             s.append(o.getCommand());
             s.append("\n");
         }
+        s.append("\t").append(ANSI_BOLD).append(0).append(": ").append(ANSI_RESET).append("Go Back\n");
         return s.toString();
     }
 }
