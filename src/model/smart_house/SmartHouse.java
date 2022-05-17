@@ -1,5 +1,6 @@
 package model.smart_house;
 
+import model.DivisionDoesNotExistException;
 import model.proprietary.Proprietary;
 import model.smart_house.smart_devices.SmartDevice;
 
@@ -53,5 +54,29 @@ public class SmartHouse implements Serializable {
 
     public String getEnergySupplierName() {
         return energySupplier;
+    }
+
+    public void turnOnAllDevices() {
+        this.divisionsByName.values().forEach(Division::switchDevicesOn);
+    }
+
+    public void turnOffAllDevices() {
+        this.divisionsByName.values().forEach(Division::switchDevicesOff);
+    }
+
+    public void  turnOnDeviceInDivision(String division, int id)
+            throws DeviceNotExistException, DivisionDoesNotExistException {
+        Division elem = this.divisionsByName.get(division);
+        if (elem == null)
+            throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
+        elem.switchDeviceOn(id);
+    }
+
+    public void  turnOffDeviceInDivision(String division, int id)
+            throws DeviceNotExistException, DivisionDoesNotExistException {
+        Division elem = this.divisionsByName.get(division);
+        if (elem == null)
+            throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
+        elem.switchDeviceOff(id);
     }
 }

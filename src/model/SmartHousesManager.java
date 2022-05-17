@@ -2,6 +2,7 @@ package model;
 
 import model.energy_suppliers.EnergySupplier;
 import model.parse.Parser;
+import model.smart_house.DeviceNotExistException;
 import model.smart_house.Invoice;
 import model.smart_house.SmartHouse;
 import model.smart_house.smart_devices.SmartDevice;
@@ -26,6 +27,14 @@ public class SmartHousesManager implements Serializable, ISmartHouseManager {
         return Parser.parse(filepath);
     }
 
+    private SmartHouse getSmartHouse(String tin) throws ProprietaryDoesNotExistException {
+        SmartHouse smartHouse = smartHousesByTIN.get(tin);
+        if (smartHouse == null) {
+            throw new ProprietaryDoesNotExistException("Proprietary with tin \"" + tin + "\" does not exist");
+        }
+        return smartHouse;
+    }
+
     public void addEnergySupplier(String energySupplierName) {
         energySuppliers.put(energySupplierName, new EnergySupplier(energySupplierName));
     }
@@ -34,7 +43,8 @@ public class SmartHousesManager implements Serializable, ISmartHouseManager {
         throws EnergySupplierDoesNotExistException {
         // check if the energy supplier exists
         if (energySuppliers.get(smartHouse.getEnergySupplierName()) == null) {
-            throw new EnergySupplierDoesNotExistException();
+            throw new EnergySupplierDoesNotExistException("Energy Supplier \"" +
+                    smartHouse.getEnergySupplierName() + "\" does not exist");
         }
         smartHousesByTIN.put(smartHouse.getProprietaryTin(), smartHouse);
     }
@@ -43,7 +53,7 @@ public class SmartHousesManager implements Serializable, ISmartHouseManager {
         throws ProprietaryDoesNotExistException {
         SmartHouse smartHouse = smartHousesByTIN.get(tin);
         if (smartHouse == null) {
-            throw new ProprietaryDoesNotExistException();
+            throw new ProprietaryDoesNotExistException("Proprietary with tin \"" + tin + "\" does not exist");
         }
         smartHouse.addSmartDevice(division, smartDevice);
     }
@@ -51,6 +61,28 @@ public class SmartHousesManager implements Serializable, ISmartHouseManager {
     public void skipDays(int numDays) {
         date = date.plusDays(numDays);
         emitInvoices(numDays);
+    }
+
+    public void turnOnAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException {
+        SmartHouse smartHouse = this.getSmartHouse(tin);
+        smartHouse.turnOnAllDevices();
+    }
+
+    public void turnOffAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException {
+        SmartHouse smartHouse = this.getSmartHouse(tin);
+        smartHouse.turnOffAllDevices();
+    }
+
+    public void  turnOnDeviceInDivision(String tin, String division, int id)
+            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+        SmartHouse smartHouse = this.getSmartHouse(tin);
+        smartHouse.turnOnDeviceInDivision(division,id);
+    }
+
+    public void  turnOffDeviceInDivision(String tin, String division, int id)
+            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+        SmartHouse smartHouse = this.getSmartHouse(tin);
+        smartHouse.turnOffDeviceInDivision(division,id);
     }
 
     private void emitInvoices(int numDays) {

@@ -1,5 +1,6 @@
 package model;
 
+import model.smart_house.DeviceNotExistException;
 import model.smart_house.Invoice;
 import model.smart_house.SmartHouse;
 import model.smart_house.smart_devices.SmartDevice;
@@ -18,6 +19,14 @@ public interface ISmartHouseManager {
 
     void addSmartDeviceToHouse(String tin, String division, SmartDevice smartDevice)
             throws ProprietaryDoesNotExistException;
+
+
+    void turnOffAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
+    void turnOnAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
+    void  turnOffDeviceInDivision(String tin, String division, int id)
+            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
+    void  turnOnDeviceInDivision(String tin, String division, int id)
+            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
 
     void skipDays(int numDays);
 

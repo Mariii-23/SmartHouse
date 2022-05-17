@@ -1,27 +1,57 @@
 package control;
 
-import model.ISmartHouseManager;
-import model.SmartHousesManager;
+import model.*;
 import model.parse.Parser;
+import model.smart_house.DeviceNotExistException;
+import model.smart_house.SmartHouse;
+import model.smart_house.smart_devices.SmartDevice;
 
 import java.io.IOException;
 
 public class State implements IState {
-    private ISmartHouseManager smartHouseManage;
+    private ISmartHouseManager smartHouseManager;
 
     public State() {
-        this.smartHouseManage = new SmartHousesManager();
+        this.smartHouseManager = new SmartHousesManager();
     }
 
     public void readFromObjectFile(final String filepath) throws IOException, ClassNotFoundException {
-        this.smartHouseManage = SmartHousesManager.readObjectFile(filepath);
+        this.smartHouseManager = SmartHousesManager.readObjectFile(filepath);
     }
 
     public void readFromFile(final String filepath) throws IOException {
-        this.smartHouseManage = Parser.parse(filepath);
+        this.smartHouseManager = Parser.parse(filepath);
     }
 
     public void saveObjectFile(final String filepath) throws IOException {
-        this.smartHouseManage.saveObjectFile(filepath);
+        this.smartHouseManager.saveObjectFile(filepath);
+    }
+
+    public void addSmartHouse(SmartHouse smartHouse)
+            throws EnergySupplierDoesNotExistException {
+        this.smartHouseManager.addSmartHouse(smartHouse);
+    }
+
+    public void addSmartDevice(SmartDevice device, String division, String tinProprietary)
+            throws ProprietaryDoesNotExistException {
+        this.smartHouseManager.addSmartDeviceToHouse(tinProprietary, division, device);
+    }
+
+    public void turnOffAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException {
+        this.smartHouseManager.turnOffAllDevicesByTin(tin);
+    }
+
+    public void turnOnAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException {
+        this.smartHouseManager.turnOnAllDevicesByTin(tin);
+    }
+
+    public void  turnOffDeviceInDivision(String tin, String division, int id)
+            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+        this.smartHouseManager.turnOffDeviceInDivision(tin,division,id);
+    }
+
+    public void  turnOnDeviceInDivision(String tin, String division, int id)
+            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+        this.smartHouseManager.turnOnDeviceInDivision(tin,division,id);
     }
 }
