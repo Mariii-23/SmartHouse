@@ -62,11 +62,11 @@ public class Menu<T> {
     }
 
     public Boolean isValid() {
-        return this.option >= 0 && this.option < this.options.size();
+        return this.option - 1  >= 0 && this.option - 1 < this.options.size();
     }
 
     public Consumer<T> getFunction() {
-        return this.options.get(this.option).getFunction();
+        return this.options.get(this.option - 1).getFunction();
     }
 
     public void runMenu(T that) {
@@ -83,7 +83,7 @@ public class Menu<T> {
                 }
             }
             IO.printLine("");
-        } while (this.getOption() != this.sizeOption() - 1);
+        } while (this.getOption() != 0);
     }
 
     public Boolean stop() {
@@ -97,11 +97,12 @@ public class Menu<T> {
         int i = 0;
         s.append("\n");
         s.append(ANSI_BOLD).append("MENU").append(ANSI_RESET).append("\n");
+        s.append("\t").append(ANSI_BOLD).append(i).append(": ").append(ANSI_RESET).append("Go Back\n");
         for (OptionCommand o : this.options) {
+            i++;
             s.append("\t").append(ANSI_BOLD).append(i).append(": ").append(ANSI_RESET);
             s.append(o.getCommand());
             s.append("\n");
-            i++;
         }
         return s.toString();
     }
