@@ -1,8 +1,8 @@
-package control;
+package controller;
 
 import model.*;
 import model.parse.Parser;
-import model.smart_house.DeviceNotExistException;
+import model.smart_house.DeviceDoesNotExistException;
 import model.smart_house.SmartHouse;
 import model.smart_house.smart_devices.SmartDevice;
 
@@ -45,13 +45,13 @@ public class State implements IState {
         this.smartHouseManager.turnOnAllDevicesByTin(tin);
     }
 
-    public void  turnOffDeviceInDivision(String tin, String division, int id)
-            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
-        this.smartHouseManager.turnOffDeviceInDivision(tin,division,id);
+    public void turnOffDeviceInDivision(String tin, String division, int id)
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+        this.smartHouseManager.turnOffDeviceInDivision(tin, division, id);
     }
 
-    public void  turnOnDeviceInDivision(String tin, String division, int id)
-            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
-        this.smartHouseManager.turnOnDeviceInDivision(tin,division,id);
+    public void turnOnDeviceInDivision(String tin, String division, int id)
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+        this.smartHouseManager.turnOnDeviceInDivision(tin, division, id);
     }
 }

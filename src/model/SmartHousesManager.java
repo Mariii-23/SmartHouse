@@ -1,11 +1,13 @@
 package model;
 
 import model.energy_suppliers.EnergySupplier;
+import model.energy_suppliers.Invoice;
 import model.parse.Parser;
-import model.smart_house.DeviceNotExistException;
-import model.smart_house.Invoice;
+import model.proprietary.Proprietary;
+import model.smart_house.DeviceDoesNotExistException;
 import model.smart_house.SmartHouse;
 import model.smart_house.smart_devices.SmartDevice;
+import utils.Pair;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -44,9 +46,9 @@ public class SmartHousesManager implements Serializable, ISmartHouseManager {
         // check if the energy supplier exists
         if (energySuppliers.get(smartHouse.getEnergySupplierName()) == null) {
             throw new EnergySupplierDoesNotExistException("Energy Supplier \"" +
-                    smartHouse.getEnergySupplierName() + "\" does not exist");
+                smartHouse.getEnergySupplierName() + "\" does not exist");
         }
-        smartHousesByTIN.put(smartHouse.getProprietaryTin(), smartHouse);
+        smartHousesByTIN.put(smartHouse.getProprietaryTin(), smartHouse.clone());
     }
 
     public void addSmartDeviceToHouse(String tin, String division, SmartDevice smartDevice)
@@ -55,12 +57,13 @@ public class SmartHousesManager implements Serializable, ISmartHouseManager {
         if (smartHouse == null) {
             throw new ProprietaryDoesNotExistException("Proprietary with tin \"" + tin + "\" does not exist");
         }
-        smartHouse.addSmartDevice(division, smartDevice);
+        smartHouse.addSmartDevice(division, smartDevice.clone());
     }
 
     public void skipDays(int numDays) {
-        date = date.plusDays(numDays);
-        emitInvoices(numDays);
+        LocalDate newDate = date.plusDays(numDays);
+        emitInvoices(newDate);
+        date = newDate;
     }
 
     public void turnOnAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException {
@@ -73,69 +76,79 @@ public class SmartHousesManager implements Serializable, ISmartHouseManager {
         smartHouse.turnOffAllDevices();
     }
 
-    public void  turnOnDeviceInDivision(String tin, String division, int id)
-            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+    public void turnOnDeviceInDivision(String tin, String division, int id)
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
-        smartHouse.turnOnDeviceInDivision(division,id);
+        smartHouse.turnOnDeviceInDivision(division, id);
     }
 
-    public void  turnOffDeviceInDivision(String tin, String division, int id)
-            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+    public void turnOffDeviceInDivision(String tin, String division, int id)
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
-        smartHouse.turnOffDeviceInDivision(division,id);
+        smartHouse.turnOffDeviceInDivision(division, id);
     }
 
-    private void emitInvoices(int numDays) {
+    private void emitInvoices(LocalDate newDate) {
         for (SmartHouse smartHouse : smartHousesByTIN.values()) {
             // we assume the energy supplier exists in the map because we assure it exists on house insertion.
             EnergySupplier energySupplier = energySuppliers.get(smartHouse.getEnergySupplierName());
             float dailyConsumption = smartHouse.getEnergyConsumption();
-            float energyCost = energySupplier.energyCost(smartHouse.getNumDevices(), dailyConsumption) * numDays;
-            energySupplier.addInvoice(new Invoice(numDays, dailyConsumption, energyCost, date, energySupplier.getName()),
-                    smartHouse.getProprietaryTin());
+            float dailyEnergyCost = energySupplier.energyCost(smartHouse.getNumDevices(), dailyConsumption);
+            energySupplier.addInvoice(
+                new Invoice(energySupplier.getName(), dailyConsumption, dailyEnergyCost, date, newDate),
+                smartHouse.getProprietaryTin()
+            );
         }
     }
 
     public Optional<Pair<String, Double>> highestProfitSupplier() {
         return energySuppliers.entrySet()
-                .stream()
-                .map(kv -> new Pair<>(kv.getKey(), kv.getValue().getAmountMoney()))
-                .max(Comparator.comparing(Pair::getSecond));
-        //return energySuppliers.entrySet()
-        //        .stream()
-        //        .max(Comparator.comparing(kv -> kv.getValue().getAmountMoney()))
-        //        .map(kv -> new Pair<>(kv.getKey(), kv.getValue().getAmountMoney()));
+            .stream()
+            .map(kv -> new Pair<>(kv.getKey(), kv.getValue().invoiceVolume()))
+            .max(Comparator.comparing(Pair::getSecond));
     }
 
-    public Optional<Pair<String, Double>> mostExpensiveHouseBetween(LocalDate startDate, LocalDate endDate) {
+    public Optional<Pair<String, Double>> mostCostlyHouseBetween(LocalDate startDate, LocalDate endDate) {
         return energySuppliers.values()
-                .stream()
-                .map(energySupplier -> energySupplier.mostExpensiveHouseBetween(startDate, endDate))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .max(Comparator.comparing(Pair::getSecond));
+            .stream()
+            .map(energySupplier -> energySupplier.mostCostlyHouseBetween(startDate, endDate))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .max(Comparator.comparing(Pair::getSecond));
     }
 
-    public Set<Invoice> invoicesByEnergySupplier(String energySupplierName) throws EnergySupplierDoesNotExistException {
+    public List<Invoice> invoicesByEnergySupplier(String energySupplierName) throws EnergySupplierDoesNotExistException {
         EnergySupplier energySupplier = this.energySuppliers.get(energySupplierName);
         if (energySupplier == null)
             throw new EnergySupplierDoesNotExistException("Energy Supplier : " + energySupplierName + " does not exist.");
-        return energySupplier.getAllInvoices();
+        return energySupplier.getInvoices();
     }
 
-    public Set<Pair<String, Double>> energySupplierOrderBetween(LocalDate startDate, LocalDate endDate) {
+    public List<Pair<String, Double>> energySuppliersRankedByInvoiceVolumeBetween(LocalDate startDate, LocalDate endDate) {
         return this.energySuppliers.values()
-                .stream()
-                .map(e-> new Pair<>(e.getName(), e.getAmountMoneyBetween(startDate,endDate)))
-                .sorted((e1, e2) -> (int) (e1.getSecond() - e2.getSecond()))
-                .collect(Collectors.toCollection(LinkedHashSet::new))
-                ;
+            .stream()
+            .map(e -> new Pair<>(e.getName(), e.invoiceVolumeBetween(startDate, endDate)))
+            .sorted((e1, e2) -> (int) (e1.getSecond() - e2.getSecond()))
+            .collect(Collectors.toList());
+    }
+
+    public List<Pair<Proprietary, Double>> proprietariesRankedByEnergyConsumptionBetween(LocalDate startDate, LocalDate endDate) {
+        return this.energySuppliers.values()
+            .stream()
+            .map(e -> e.proprietariesEnergyConsumptionBetween(startDate, endDate))
+            .flatMap(m -> m.entrySet().stream())
+            .collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.summingDouble(Map.Entry::getValue)))
+            .entrySet()
+            .stream()
+            .map(kv -> new Pair<>(smartHousesByTIN.get(kv.getKey()).getProprietary(), kv.getValue()))
+            .sorted((e1, e2) -> (int) (e1.getSecond() - e2.getSecond()))
+            .collect(Collectors.toList());
     }
 
     public static SmartHousesManager readObjectFile(String filename) throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(filename);
         ObjectInputStream ois = new ObjectInputStream(fis);
-        SmartHousesManager smartHousesManager =  (SmartHousesManager) ois.readObject();
+        SmartHousesManager smartHousesManager = (SmartHousesManager) ois.readObject();
         ois.close();
         fis.close();
         return smartHousesManager;

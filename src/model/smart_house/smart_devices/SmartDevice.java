@@ -16,6 +16,15 @@ public abstract class SmartDevice implements Serializable {
         this.on = false;
     }
 
+    public SmartDevice(SmartDevice that) {
+        this.fixedConsumption = that.getFixedConsumption();
+        this.on = that.isOn();
+    }
+
+    public float getFixedConsumption() {
+        return fixedConsumption;
+    }
+
     public boolean isOn() {
         return on;
     }
@@ -33,4 +42,6 @@ public abstract class SmartDevice implements Serializable {
     }
 
     public abstract float getEnergyConsumption();
+
+    public abstract SmartDevice clone();
 }

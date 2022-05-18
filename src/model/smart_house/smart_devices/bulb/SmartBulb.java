@@ -20,6 +20,20 @@ public class SmartBulb extends SmartDevice implements Serializable {
         this.diameter = diameter;
     }
 
+    public SmartBulb(SmartBulb that) {
+        super(that);
+        this.tone = that.getTone();
+        this.diameter = that.getDiameter();
+    }
+
+    public Tone getTone() {
+        return tone;
+    }
+
+    public float getDiameter() {
+        return diameter;
+    }
+
     public void setTone(Tone tone) {
         this.tone = tone;
     }
@@ -27,5 +41,10 @@ public class SmartBulb extends SmartDevice implements Serializable {
     @Override
     public float getEnergyConsumption() {
         return isOn() ? fixedConsumption + tone.getEnergyFactor() : 0;
+    }
+
+    @Override
+    public SmartBulb clone() {
+        return new SmartBulb(this);
     }
 }

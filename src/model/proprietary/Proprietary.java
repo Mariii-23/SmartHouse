@@ -11,7 +11,17 @@ public class Proprietary implements Serializable {
         this.tin = tin;
     }
 
+    public Proprietary(Proprietary that) {
+        this.name = that.name;
+        this.tin = that.tin;
+    }
+
     public String getTin() {
         return tin;
+    }
+
+    @Override
+    public Proprietary clone() {
+        return new Proprietary(this);
     }
 }

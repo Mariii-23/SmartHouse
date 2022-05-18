@@ -1,6 +1,6 @@
 package view;
 
-import control.IState;
+import controller.IState;
 import model.proprietary.Proprietary;
 import model.smart_house.SmartHouse;
 import model.smart_house.smart_devices.SmartDevice;

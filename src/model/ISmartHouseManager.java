@@ -1,14 +1,16 @@
 package model;
 
-import model.smart_house.DeviceNotExistException;
-import model.smart_house.Invoice;
+import model.energy_suppliers.Invoice;
+import model.proprietary.Proprietary;
+import model.smart_house.DeviceDoesNotExistException;
 import model.smart_house.SmartHouse;
 import model.smart_house.smart_devices.SmartDevice;
+import utils.Pair;
 
-import java.io.*;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface ISmartHouseManager {
 
@@ -22,21 +24,26 @@ public interface ISmartHouseManager {
 
 
     void turnOffAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
+
     void turnOnAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
-    void  turnOffDeviceInDivision(String tin, String division, int id)
-            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
-    void  turnOnDeviceInDivision(String tin, String division, int id)
-            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
+
+    void turnOffDeviceInDivision(String tin, String division, int id)
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
+
+    void turnOnDeviceInDivision(String tin, String division, int id)
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
 
     void skipDays(int numDays);
 
     Optional<Pair<String, Double>> highestProfitSupplier();
 
-    Optional<Pair<String, Double>> mostExpensiveHouseBetween(LocalDate startDate, LocalDate endDate);
+    Optional<Pair<String, Double>> mostCostlyHouseBetween(LocalDate startDate, LocalDate endDate);
 
-    Set<Invoice> invoicesByEnergySupplier(String energySupplierName) throws EnergySupplierDoesNotExistException;
+    List<Invoice> invoicesByEnergySupplier(String energySupplierName) throws EnergySupplierDoesNotExistException;
 
-    Set<Pair<String, Double>> energySupplierOrderBetween(LocalDate startDate, LocalDate endDate);
+    List<Pair<String, Double>> energySuppliersRankedByInvoiceVolumeBetween(LocalDate startDate, LocalDate endDate);
+
+    List<Pair<Proprietary, Double>> proprietariesRankedByEnergyConsumptionBetween(LocalDate startDate, LocalDate endDate);
 
     void saveObjectFile(String filename) throws IOException;
 }

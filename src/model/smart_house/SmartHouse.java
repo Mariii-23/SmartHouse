@@ -7,6 +7,8 @@ import model.smart_house.smart_devices.SmartDevice;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class SmartHouse implements Serializable {
     private final Proprietary proprietary;
@@ -17,6 +19,23 @@ public class SmartHouse implements Serializable {
         this.proprietary = proprietary;
         this.divisionsByName = new HashMap<>();
         this.energySupplier = energySupplier;
+    }
+
+    public SmartHouse(SmartHouse that) {
+        this.proprietary = that.getProprietary();
+        this.divisionsByName = that.getDivisionsByName();
+    }
+
+    public Proprietary getProprietary() {
+        return proprietary.clone();
+    }
+
+    public Map<String, Division> getDivisionsByName() {
+        return divisionsByName
+            .values()
+            .stream()
+            .map(Division::clone)
+            .collect(Collectors.toMap(Division::getName, Function.identity()));
     }
 
     public String getProprietaryTin() {
@@ -64,19 +83,24 @@ public class SmartHouse implements Serializable {
         this.divisionsByName.values().forEach(Division::switchDevicesOff);
     }
 
-    public void  turnOnDeviceInDivision(String division, int id)
-            throws DeviceNotExistException, DivisionDoesNotExistException {
+    public void turnOnDeviceInDivision(String division, int id)
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException {
         Division elem = this.divisionsByName.get(division);
         if (elem == null)
             throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
         elem.switchDeviceOn(id);
     }
 
-    public void  turnOffDeviceInDivision(String division, int id)
-            throws DeviceNotExistException, DivisionDoesNotExistException {
+    public void turnOffDeviceInDivision(String division, int id)
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException {
         Division elem = this.divisionsByName.get(division);
         if (elem == null)
             throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
         elem.switchDeviceOff(id);
+    }
+
+    @Override
+    public SmartHouse clone() {
+        return new SmartHouse(this);
     }
 }

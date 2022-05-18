@@ -56,8 +56,6 @@ public class Parser {
     }
 
     private static String parseSmartHouse(Iterator<String> it, SmartHouse smartHouse) {
-
-
         for (String nextLine = it.hasNext() ? it.next() : null;
              nextLine != null;
         ) {

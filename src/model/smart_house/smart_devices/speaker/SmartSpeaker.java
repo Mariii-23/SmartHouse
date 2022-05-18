@@ -27,11 +27,12 @@ public class SmartSpeaker extends SmartDevice implements Serializable {
         this.brand = brand;
     }
 
-    // public SmartSpeaker(final float installationCost, final String channel) {
-    //     super(installationCost);
-    //     this.volume = (MAX - MIN) / 2;
-    //     this.channel = channel;
-    // }
+    public SmartSpeaker(SmartSpeaker that) {
+        super(that);
+        this.volume = that.getVolume();
+        this.channel = that.getChannel();
+        this.brand = that.getBrand();
+    }
 
     public void volumeUp() {
         if (this.volume < MAX) this.volume++;
@@ -53,6 +54,10 @@ public class SmartSpeaker extends SmartDevice implements Serializable {
         return this.channel;
     }
 
+    public String getBrand() {
+        return brand;
+    }
+
     // FIXME
     public float getEnergyFactor() {
         return (160 * this.volume) / 100.f;
@@ -61,5 +66,10 @@ public class SmartSpeaker extends SmartDevice implements Serializable {
     @Override
     public float getEnergyConsumption() {
         return isOn() ? fixedConsumption + getEnergyFactor() : 0;
+    }
+
+    @Override
+    public SmartSpeaker clone() {
+        return new SmartSpeaker(this);
     }
 }

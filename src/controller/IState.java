@@ -1,9 +1,9 @@
-package control;
+package controller;
 
 import model.DivisionDoesNotExistException;
 import model.EnergySupplierDoesNotExistException;
 import model.ProprietaryDoesNotExistException;
-import model.smart_house.DeviceNotExistException;
+import model.smart_house.DeviceDoesNotExistException;
 import model.smart_house.SmartHouse;
 import model.smart_house.smart_devices.SmartDevice;
 
@@ -26,11 +26,14 @@ public interface IState {
     //void changeValuesSupllier();
 
     void turnOffAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
+
     void turnOnAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
-    void  turnOffDeviceInDivision(String tin, String division, int id)
-            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
-    void  turnOnDeviceInDivision(String tin, String division, int id)
-            throws DeviceNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
+
+    void turnOffDeviceInDivision(String tin, String division, int id)
+        throws DivisionDoesNotExistException, ProprietaryDoesNotExistException, DeviceDoesNotExistException;
+
+    void turnOnDeviceInDivision(String tin, String division, int id)
+        throws DivisionDoesNotExistException, ProprietaryDoesNotExistException, DeviceDoesNotExistException;
 
     //void mostExpensiveHouseBetween();
     //void mostExpensiveEnergySupplier();

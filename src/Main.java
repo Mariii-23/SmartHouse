@@ -1,5 +1,5 @@
-import control.IState;
-import control.State;
+import controller.IState;
+import controller.State;
 import view.IIO;
 import view.IO;
 

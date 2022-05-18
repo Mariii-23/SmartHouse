@@ -1,9 +1,8 @@
 package model.energy_suppliers;
 
-import model.Pair;
 import model.energy_suppliers.energy_plans.BasePlan;
 import model.energy_suppliers.energy_plans.EnergyPlan;
-import model.smart_house.Invoice;
+import utils.Pair;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -34,52 +33,67 @@ public class EnergySupplier implements Serializable {
         invoices.add(invoice.clone());
     }
 
-    public double getAmountMoney() {
+    public List<Invoice> getInvoices() {
         return this.invoicesByProprietaryTin.values().stream()
-                .mapToDouble(
-                        e -> e.stream()
-                                .mapToDouble(Invoice::getCost)
-                                .sum()
-                ).sum();
+            .flatMap(list -> list.stream().map(Invoice::clone))
+            .collect(Collectors.toList());
     }
 
-    public double getAmountMoneyBetween(LocalDate startDate, LocalDate endDate) {
+    public double invoiceVolume() {
+        return this.invoicesByProprietaryTin
+            .values()
+            .stream()
+            .flatMap(Collection::stream)
+            .mapToDouble(Invoice::getCost)
+            .sum();
+    }
+
+    public double invoiceVolumeBetween(LocalDate startDate, LocalDate endDate) {
         double amount = 0;
-        for (var proprietary : this.invoicesByProprietaryTin.entrySet()) {
-            for (Invoice invoice : proprietary.getValue()) {
-                LocalDate invoiceDate = invoice.getDate();
-                if(invoiceDate.isBefore(startDate) || invoiceDate.isAfter(endDate))
+        for (List<Invoice> proprietaryInvoices : this.invoicesByProprietaryTin.values()) {
+            for (Invoice invoice : proprietaryInvoices) {
+                if (invoice.getStartDate().isAfter(endDate)) {
                     break;
-                amount += invoice.getCost();
+                }
+                amount += invoice.getCostBetween(startDate, endDate);
             }
         }
         return amount;
     }
 
-    public Set<Invoice> getAllInvoices() {
-        return this.invoicesByProprietaryTin.values().stream()
-                .flatMap(list -> list.stream().map(Invoice::clone))
-                .collect(Collectors.toSet());
-    }
-
-    public Optional<Pair<String, Double>> mostExpensiveHouseBetween(LocalDate startDate, LocalDate endDate) {
+    public Optional<Pair<String, Double>> mostCostlyHouseBetween(LocalDate startDate, LocalDate endDate) {
         double maxMoney = -1;
         String proprietaryTin = "";
-        for (var proprietary : this.invoicesByProprietaryTin.entrySet()) {
+        for (Map.Entry<String, List<Invoice>> proprietaryInvoices : this.invoicesByProprietaryTin.entrySet()) {
             double money = 0;
-            for (Invoice invoice : proprietary.getValue()) {
-                LocalDate invoiceDate = invoice.getDate();
-                if(invoiceDate.isBefore(startDate) || invoiceDate.isAfter(endDate))
+            for (Invoice invoice : proprietaryInvoices.getValue()) {
+                if (invoice.getStartDate().isAfter(endDate)) {
                     break;
-                money += invoice.getCost();
+                }
+                money += invoice.getCostBetween(startDate, endDate);
             }
             if (maxMoney < money) {
                 maxMoney = money;
-                proprietaryTin = proprietary.getKey();
+                proprietaryTin = proprietaryInvoices.getKey();
             }
         }
         if (maxMoney == -1)
             return Optional.empty();
         return Optional.of(new Pair<>(proprietaryTin, maxMoney));
+    }
+
+    public Map<String, Double> proprietariesEnergyConsumptionBetween(LocalDate startDate, LocalDate endDate) {
+        Map<String, Double> res = new HashMap<>();
+        for (Map.Entry<String, List<Invoice>> proprietaryInvoices : this.invoicesByProprietaryTin.entrySet()) {
+            double consumption = 0;
+            for (Invoice invoice : proprietaryInvoices.getValue()) {
+                if (invoice.getStartDate().isAfter(endDate)) {
+                    break;
+                }
+                consumption += invoice.getConsumptionBetween(startDate, endDate);
+            }
+            res.put(proprietaryInvoices.getKey(), consumption);
+        }
+        return res;
     }
 }
