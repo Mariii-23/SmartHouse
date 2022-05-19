@@ -71,6 +71,10 @@ public class Division implements Serializable {
         return smartDevices.size();
     }
 
+    public List<String> getAllDevicesName() {
+        return this.smartDevices.stream().map(SmartDevice::getSimpleName).collect(Collectors.toList());
+    }
+
     @Override
     public Division clone() {
         return new Division(this);

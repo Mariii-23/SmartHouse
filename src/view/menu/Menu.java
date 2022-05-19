@@ -79,7 +79,8 @@ public class Menu<T> {
                 Consumer<T> function = this.getFunction();
                 function.accept(that);
                 if (stop() || this.stop) {
-                    this.option = this.sizeOption() - 1;
+                    //this.option = this.sizeOption() - 1;
+                    this.option = 0;
                 }
             }
             IO.printLine("");
@@ -88,7 +89,7 @@ public class Menu<T> {
 
     public Boolean stop() {
         if (isValid())
-            return this.options.get(option).stop();
+            return this.options.get(option - 1).stop();
         return false;
     }
 

@@ -39,6 +39,11 @@ public class SmartBulb extends SmartDevice implements Serializable {
     }
 
     @Override
+    public String getSimpleName() {
+        return "SmartBulb";
+    }
+
+    @Override
     public float getEnergyConsumption() {
         return isOn() ? fixedConsumption + tone.getEnergyFactor() : 0;
     }

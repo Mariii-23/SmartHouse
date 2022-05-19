@@ -6,6 +6,7 @@ import model.smart_house.smart_devices.SmartDevice;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -97,6 +98,19 @@ public class SmartHouse implements Serializable {
         if (elem == null)
             throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
         elem.switchDeviceOff(id);
+    }
+
+    public HashMap<String, List<String>> getAllDevices() {
+        HashMap<String, List<String>> result = new HashMap<>();
+        this.divisionsByName.forEach((key, value) -> result.put(key, value.getAllDevicesName()));
+        return result;
+    }
+
+    public List<String> getAllDevicesByDivision(String divisionName) throws DivisionDoesNotExistException {
+        var division = this.divisionsByName.get(divisionName);
+        if(division == null)
+            throw new DivisionDoesNotExistException("Division does not exist : " + divisionName);
+        return division.getAllDevicesName();
     }
 
     @Override

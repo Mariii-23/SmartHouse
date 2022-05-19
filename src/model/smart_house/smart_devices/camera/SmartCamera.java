@@ -48,6 +48,11 @@ public class SmartCamera extends SmartDevice implements Serializable {
     }
 
     @Override
+    public String getSimpleName() {
+        return "SmartCamera";
+    }
+
+    @Override
     public SmartCamera clone() {
         return new SmartCamera(this);
     }

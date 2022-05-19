@@ -44,4 +44,6 @@ public abstract class SmartDevice implements Serializable {
     public abstract float getEnergyConsumption();
 
     public abstract SmartDevice clone();
+
+    public abstract String getSimpleName();
 }

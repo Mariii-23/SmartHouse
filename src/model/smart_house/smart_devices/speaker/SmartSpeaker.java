@@ -64,6 +64,11 @@ public class SmartSpeaker extends SmartDevice implements Serializable {
     }
 
     @Override
+    public String getSimpleName() {
+        return "SmartSpeaker";
+    }
+
+    @Override
     public float getEnergyConsumption() {
         return isOn() ? fixedConsumption + getEnergyFactor() : 0;
     }

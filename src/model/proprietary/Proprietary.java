@@ -24,4 +24,14 @@ public class Proprietary implements Serializable {
     public Proprietary clone() {
         return new Proprietary(this);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[")
+          .append(tin)
+          .append("]  ")
+          .append(name);
+        return sb.toString();
+    }
 }

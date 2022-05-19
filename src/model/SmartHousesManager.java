@@ -29,12 +29,36 @@ public class SmartHousesManager implements Serializable, ISmartHouseManager {
         return Parser.parse(filepath);
     }
 
+    public LocalDate todaysDate() {
+        return date;
+    }
+
+    public List<Proprietary> allProprietaries(){
+        return this.smartHousesByTIN.values().stream().map(SmartHouse::getProprietary).collect(Collectors.toList());
+    }
+
     private SmartHouse getSmartHouse(String tin) throws ProprietaryDoesNotExistException {
         SmartHouse smartHouse = smartHousesByTIN.get(tin);
         if (smartHouse == null) {
             throw new ProprietaryDoesNotExistException("Proprietary with tin \"" + tin + "\" does not exist");
         }
         return smartHouse;
+    }
+
+    public boolean containsProprietary(String tin) {
+        return this.smartHousesByTIN.containsKey(tin);
+    }
+
+    public HashMap<String, List<String>> allDevicesByTin(String tin )
+            throws ProprietaryDoesNotExistException {
+        SmartHouse smartHouse = this.getSmartHouse(tin);
+        return smartHouse.getAllDevices();
+    }
+
+    public List<String> allDevicesByTinAndDivision(String tin, String division)
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException {
+        SmartHouse smartHouse = this.getSmartHouse(tin);
+        return smartHouse.getAllDevicesByDivision(division);
     }
 
     public void addEnergySupplier(String energySupplierName) {

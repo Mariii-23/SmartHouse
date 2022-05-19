@@ -1,21 +1,15 @@
 package view;
 
 import controller.IState;
-import model.proprietary.Proprietary;
-import model.smart_house.SmartHouse;
-import model.smart_house.smart_devices.SmartDevice;
-import model.smart_house.smart_devices.bulb.SmartBulb;
-import model.smart_house.smart_devices.bulb.Tone;
-import model.smart_house.smart_devices.camera.SmartCamera;
-import model.smart_house.smart_devices.speaker.SmartSpeaker;
+import utils.Pair;
 import view.menu.Menu;
 import view.menu.MenuCatalog;
 import view.menu.OptionCommand;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static view.Colors.ANSI_RED;
 import static view.Colors.ANSI_RESET;
@@ -40,23 +34,35 @@ public class IO implements IIO {
     }
 
     public static String readString() {
-        var s = new Scanner(System.in);
+        Scanner s = new Scanner(System.in);
         return s.nextLine();
     }
 
     public static int readInt() throws InputMismatchException {
-        var s = new Scanner(System.in);
+        Scanner s = new Scanner(System.in);
         return s.nextInt();
     }
 
     public static Float readFloat() throws InputMismatchException {
-        var s = new Scanner(System.in);
+        Scanner s = new Scanner(System.in);
         return s.nextFloat();
     }
 
     public static Boolean readBoolean() throws InputMismatchException {
-        var s = new Scanner(System.in);
+        Scanner s = new Scanner(System.in);
         return s.nextBoolean();
+    }
+
+    public static LocalDate readLocalDate() throws InputMismatchException {
+        Scanner s = new Scanner(System.in);
+        IO.printLine("Please just enter numbers");
+        IO.print("Year: ");
+        int year = readInt();
+        IO.print("Month: ");
+        int month = readInt();
+        IO.print("Day: ");
+        int day = readInt();
+        return LocalDate.of(year,month,day);
     }
 
     public IO(IState state) {
@@ -114,21 +120,15 @@ public class IO implements IIO {
 
     /*** Create new Devices, Houses, EnergySupplier */
 
-    //FIXME We have to check if the tin is unique
-    private Proprietary createProprietary() {
-        IO.printLine("Proprietary Creation:");
-        String tin = readTinProprietary();
-        IO.print("Enter the name of the proprietary: ");
-        String name = IO.readString();
-        return new Proprietary(name,tin);
-    }
-
     private void addNewSmartHouse() {
         try {
-            Proprietary proprietary = createProprietary();
+            IO.printLine("Proprietary Creation:");
+            String tin = readTinProprietary();
+            IO.print("Enter the name of the proprietary: ");
+            String name = IO.readString();
             IO.print("Enter the name of the energy supplier: ");
             String energySupplier = IO.readString();
-            this.state.addSmartHouse(new SmartHouse(proprietary, energySupplier));
+            this.state.addSmartHouse(tin,name,energySupplier);
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
@@ -144,14 +144,11 @@ public class IO implements IIO {
             IO.printLine("Create SmartBulb");
             IO.print("Enter the Tone: ");
             String toneName = IO.readString();
-            Tone tone = Tone.valueOf(toneName.toUpperCase());
             IO.print("Enter the fixedConsumption: ");
             Float fixedConsumption = IO.readFloat();
             IO.print("Enter the diameter: ");
             Float diameter = IO.readFloat();
-
-            SmartDevice device = new SmartBulb(fixedConsumption, tone, diameter);
-            this.state.addSmartDevice(device, division, proprietary);
+            this.state.addSmartBulb(division, proprietary, fixedConsumption, toneName,diameter);
             IO.printLine("Smart Device added with success");
         } catch (Exception e) {
             IO.showErrors("Error occurred");
@@ -174,9 +171,7 @@ public class IO implements IIO {
             int height = IO.readInt();
             IO.print("Enter the fileSize separeted with \".\": ");
             Float fileSize = IO.readFloat();
-
-            SmartDevice device = new SmartCamera(fixedConsumption,width,height,fileSize);
-            this.state.addSmartDevice(device, division, proprietary);
+            this.state.addSmartCamera(division, proprietary, fixedConsumption,width,height,fileSize);
             IO.printLine("Smart Device added with success");
         } catch (Exception e) {
             IO.showErrors("Error occurred");
@@ -199,9 +194,7 @@ public class IO implements IIO {
             String channel = IO.readString();
             IO.print("Enter the brand: ");
             String brand = IO.readString();
-
-            SmartDevice device = new SmartSpeaker(fixedConsumption, volume, channel, brand);
-            this.state.addSmartDevice(device, division, proprietary);
+            this.state.addSmartSpeaker(division, proprietary, fixedConsumption, volume, channel, brand);
             IO.printLine("Smart Device added with success");
         } catch (Exception e) {
             IO.showErrors("Error occurred");
@@ -257,7 +250,7 @@ public class IO implements IIO {
             IO.print("Enter the disivion: ");
             String division = IO.readString();
             IO.print("Enter the device's id: ");
-            int id = IO.readInt();
+            int id = IO.readInt() - 1;
             this.state.turnOffDeviceInDivision(tin,division,id);
         } catch (Exception e) {
             IO.showErrors("Error occurred");
@@ -271,7 +264,7 @@ public class IO implements IIO {
             IO.print("Enter the disivion: ");
             String division = IO.readString();
             IO.print("Enter the device's id: ");
-            int id = IO.readInt();
+            int id = IO.readInt() - 1;
             this.state.turnOnDeviceInDivision(tin,division,id);
         } catch (Exception e) {
             IO.showErrors("Error occurred");
@@ -288,11 +281,138 @@ public class IO implements IIO {
         return new Menu<>("Turn ON/OFF smart devices",list);
     }
 
+    private void showTodaysDate(){
+        LocalDate date = this.state.todaysDate();
+        date.format(DateTimeFormatter.ISO_DATE);
+        IO.printLine("Date :: " + date);
+    }
+
+    private void skipDays(){
+        try {
+            //FIXME change msg
+            IO.printLine("How many days do you want to walk forward?");
+            int skipDays = IO.readInt();
+            this.state.skipDays(skipDays);
+            showTodaysDate();
+        } catch (Exception e) {
+            IO.showErrors("Error occurred");
+            IO.showErrors(e);
+        }
+    }
+
+    private Menu<IO> menuDate() {
+        ArrayList<OptionCommand<IO>> list = new ArrayList<>();
+        list.add(new OptionCommand<>("Show Date", IO::showTodaysDate));
+        list.add(new OptionCommand<>("Skip Days", IO::skipDays));
+        return new Menu<>("Date",list);
+    }
+
+    public void highestProfitSupplier() {
+        Optional<Pair<String, Double>> result = this.state.highestProfitSupplier();
+        if (result.isEmpty()) {
+            //FIXME change msg
+            IO.printLine("There aren't enough infomation");
+        } else {
+            Pair<String, Double> profile = result.get();
+            IO.printLine("The highest profit supplier is : "
+                    + profile.getFirst() + " [" + profile.getSecond() + "]");
+        }
+    }
+
+    public void mostCostlyHouseBetween() {
+        LocalDate startDate;
+        LocalDate endDate;
+        try {
+            startDate = IO.readLocalDate();
+            endDate = IO.readLocalDate();
+        } catch (InputMismatchException e) {
+            IO.showErrors("The date you entered contains errors");
+            return;
+        }
+        var result = this.state.mostCostlyHouseBetween(startDate,endDate);
+        if (result.isEmpty()) {
+            //FIXME change msg
+            IO.printLine("There aren't enough information");
+        } else {
+            Pair<String, Double> profile = result.get();
+            IO.printLine("The most costly house is : "
+                    + profile.getFirst() + " [" + profile.getSecond() + "]");
+        }
+    }
+
+    //TODO
+    private Menu<IO> menuStatics() {
+        ArrayList<OptionCommand<IO>> list = new ArrayList<>();
+        list.add(new OptionCommand<>("Highest profit supplier", IO::highestProfitSupplier));
+        list.add(new OptionCommand<>("Most costly house between two dates", IO::mostCostlyHouseBetween));
+        //list.add(new OptionCommand<>("Invoices by energy supplier", IO::));
+        //list.add(new OptionCommand<>("Energy supplier ranked by invoice volume between two dates", IO::));
+        //list.add(new OptionCommand<>("Proprietaries ranked by energy consumption between two dates", IO::));
+        return new Menu<>("Statics",list);
+    }
+
+
+    // SHOW
+
+    private void showAllDevicesByTin() {
+        String tin = readTinProprietary();
+        try {
+            HashMap<String, List<String>> result = this.state.allDevicesByTin(tin);
+            IO.printLine("");
+            for (Map.Entry<String, List<String>> division : result.entrySet()) {
+                IO.printLine("\n"+division.getKey());
+                int i = 1;
+                for( var device : division.getValue()) {
+                    IO.printLine(i + " :: " + device);
+                    i++;
+                }
+            }
+        } catch (Exception e) {
+            IO.showErrors("Error occurred");
+            IO.showErrors(e);
+        }
+    }
+
+    private void showAllDevicesByTinAndDivision() {
+        String tin = readTinProprietary();
+        try {
+            IO.print("Enter the division: ");
+            String division = IO.readString();
+            var result = this.state.allDevicesByTinAndDivision(tin,division);
+            int i = 1;
+            IO.printLine("");
+            for( var device : result) {
+                IO.printLine(i + " :: " + device);
+                i++;
+            }
+        } catch (Exception e) {
+            IO.showErrors("Error occurred");
+            IO.showErrors(e);
+        }
+    }
+
+    private void showAllProprietaries() {
+        this.state.allProprietarys().forEach(proprietary ->
+            IO.printLine(proprietary.toString())
+        );
+    }
+
+    private Menu<IO> menuShow() {
+        ArrayList<OptionCommand<IO>> list = new ArrayList<>();
+        list.add(new OptionCommand<>("Show all proprietaries", IO::showAllProprietaries));
+        list.add(new OptionCommand<>("Show all devices by proprietary", IO::showAllDevicesByTin));
+        list.add(new OptionCommand<>("Show all devices by proprietary and Division", IO::showAllDevicesByTinAndDivision));
+        return new Menu<>("Show information",list);
+    }
+
     private MenuCatalog<IO> menuCatalog() {
         var list = new ArrayList<Menu<IO>>();
         list.add(menuReadSaveState());
+        list.add(menuShow());
         list.add(menuAddNewInformation());
         list.add(menuTurnOnOffDevices());
+        list.add(menuDate());
+        list.add(menuStatics());
         return new MenuCatalog<>(list);
     }
 
