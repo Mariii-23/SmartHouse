@@ -35,6 +35,8 @@ public interface ISmartHousesManager {
     // smart house
     void addSmartHouse(SmartHouse smartHouse) throws EnergySupplierDoesNotExistException;
 
+    void addSmartHouse(String name, String tin, String energySupplier) throws EnergySupplierDoesNotExistException;
+
     void addSmartDeviceToHouse(String tin, String division, SmartDevice smartDevice) throws ProprietaryDoesNotExistException;
 
     void turnOffAllHouseDevices(String tin) throws ProprietaryDoesNotExistException;

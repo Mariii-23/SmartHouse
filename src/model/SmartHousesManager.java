@@ -121,6 +121,16 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
     }
 
     @Override
+    public void addSmartHouse(String name, String tin, String energySupplier)
+        throws EnergySupplierDoesNotExistException {
+        if (energySuppliers.get(energySupplier) == null) {
+            throw new EnergySupplierDoesNotExistException("Energy Supplier \"" +
+                energySupplier + "\" does not exist");
+        }
+        smartHousesByTIN.put(tin, new SmartHouse(new Proprietary(name, tin), energySupplier));
+    }
+
+    @Override
     public void addSmartDeviceToHouse(String tin, String division, SmartDevice smartDevice)
         throws ProprietaryDoesNotExistException {
         SmartHouse smartHouse = smartHousesByTIN.get(tin);
