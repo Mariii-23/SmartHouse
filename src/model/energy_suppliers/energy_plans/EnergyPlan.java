@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Random;
 
 public abstract class EnergyPlan implements Serializable {
-    protected static float baseCost = 15.0f;
+    protected static float baseCost = 0.15f;
     protected static float vat = 0.23f;
 
     public static String[] getAllEnergyPlans() {

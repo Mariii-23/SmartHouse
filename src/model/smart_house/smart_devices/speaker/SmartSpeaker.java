@@ -58,11 +58,6 @@ public class SmartSpeaker extends SmartDevice implements Serializable {
         return brand;
     }
 
-    // FIXME
-    public float getEnergyFactor() {
-        return (160 * this.volume) / 100.f;
-    }
-
     @Override
     public String getSimpleName() {
         return "SmartSpeaker";
@@ -70,7 +65,7 @@ public class SmartSpeaker extends SmartDevice implements Serializable {
 
     @Override
     public float getEnergyConsumption() {
-        return isOn() ? fixedConsumption + getEnergyFactor() : 0;
+        return isOn() ? fixedConsumption * this.volume / 100.f : 0;
     }
 
     @Override

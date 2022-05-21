@@ -3,7 +3,7 @@ package model.smart_house.smart_devices;
 import java.io.Serializable;
 
 public abstract class SmartDevice implements Serializable {
-    protected final float fixedConsumption;
+    protected final float fixedConsumption; // kWh / day
     private boolean on;
 
     public SmartDevice(float fixedConsumption, boolean on) {
@@ -50,7 +50,7 @@ public abstract class SmartDevice implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Fixed Consumption :: ").append(fixedConsumption).append("\n");
+        sb.append("Fixed Consumption :: ").append(fixedConsumption).append("kWh / day\n");
         sb.append("ON :: ").append(on).append("\n");
         return sb.toString();
     }

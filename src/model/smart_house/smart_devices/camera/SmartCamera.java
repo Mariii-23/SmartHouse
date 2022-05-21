@@ -44,7 +44,7 @@ public class SmartCamera extends SmartDevice implements Serializable {
 
     @Override
     public float getEnergyConsumption() {
-        return isOn() ? fileSize * width * height : 0;
+        return isOn() ? fixedConsumption * (1 - 1 / (fileSize * width * height)) : 0;
     }
 
     @Override
