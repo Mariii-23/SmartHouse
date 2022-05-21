@@ -76,7 +76,7 @@ public class IO implements IIO {
     }
 
     private String readTinProprietary() {
-        IO.print("Enter the tin of the proprietary: ");
+        IO.print("Enter the TIN of the proprietary: ");
         return IO.readString();
     }
 
@@ -247,9 +247,9 @@ public class IO implements IIO {
 
     private Menu<IO> menuAddNewInformation() {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
-        list.add(new OptionCommand<>("Add new Proprietary and smart house", IO::addNewSmartHouse, false));
-        list.add(new OptionCommand<>("Add new Devices", IO::addNewDevice, false));
-        list.add(new OptionCommand<>("Add new Energy Supplier", IO::addEnergySupplier, false));
+        list.add(new OptionCommand<>("Add new proprietary and smart house", IO::addNewSmartHouse, false));
+        list.add(new OptionCommand<>("Add new devices", IO::addNewDevice, false));
+        list.add(new OptionCommand<>("Add new energy supplier", IO::addEnergySupplier, false));
         return new Menu<>("Add New Information", list, false);
     }
 
@@ -308,11 +308,11 @@ public class IO implements IIO {
 
     private void runMenuTurnOnOffDevices() {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
-        list.add(new OptionCommand<>("Turn ON all devices by Proprietary", IO::turnOnAllDevicesByTin, true));
-        list.add(new OptionCommand<>("Turn ON one device", IO::turnOnDeviceInDivision));
-        list.add(new OptionCommand<>("Turn OFF all devices by Proprietary", IO::turnOffAllDevicesByTin, true));
-        list.add(new OptionCommand<>("Turn OFF one device", IO::turnOffDeviceInDivision));
-        Menu<IO> menu = new Menu<>("Turn ON/OFF smart devices", list);
+        list.add(new OptionCommand<>("Turn on all proprietary's devices", IO::turnOnAllDevicesByTin, true));
+        list.add(new OptionCommand<>("Turn on one device", IO::turnOnDeviceInDivision));
+        list.add(new OptionCommand<>("Turn off all proprietary's devices", IO::turnOffAllDevicesByTin, true));
+        list.add(new OptionCommand<>("Turn off one device", IO::turnOffDeviceInDivision));
+        Menu<IO> menu = new Menu<>("Turn on/off smart devices", list);
         menu.runMenu(this);
     }
 
@@ -324,8 +324,7 @@ public class IO implements IIO {
 
     private void skipDays() {
         try {
-            //FIXME change msg
-            IO.printLine("How many days do you want to walk forward?");
+            IO.printLine("How many days do you want to skip?");
             int skipDays = IO.readInt();
             this.state.skipDays(skipDays);
             showTodaysDate();
@@ -358,8 +357,7 @@ public class IO implements IIO {
     private void highestProfitSupplier() {
         Optional<Pair<String, Double>> result = this.state.highestProfitSupplier();
         if (result.isEmpty()) {
-            //FIXME change msg
-            IO.printLine("There aren't enough infomation");
+            IO.printLine("There isn't enough infomation");
         } else {
             Pair<String, Double> profile = result.get();
             IO.printLine("The highest profit supplier is : "
@@ -378,8 +376,7 @@ public class IO implements IIO {
         }
         var result = this.state.mostCostlyHouseBetween(startDate, endDate);
         if (result.isEmpty()) {
-            //FIXME change msg
-            IO.printLine("There aren't enough information");
+            IO.printLine("There isn't enough infomation");
         } else {
             Pair<String, Double> profile = result.get();
             IO.printLine("The most costly house is : "
@@ -511,11 +508,11 @@ public class IO implements IIO {
     private Menu<IO> menuShow() {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
         list.add(new OptionCommand<>("Show all proprietaries", IO::showAllProprietaries));
-        list.add(new OptionCommand<>("Show all devices by proprietary", IO::showAllDevicesByTin));
-        list.add(new OptionCommand<>("Show all devices by proprietary and Division", IO::showAllDevicesByTinAndDivision));
+        list.add(new OptionCommand<>("Show all proprietary's devices", IO::showAllDevicesByTin));
+        list.add(new OptionCommand<>("Show all proprietary's devices and Division", IO::showAllDevicesByTinAndDivision));
         list.add(new OptionCommand<>("Show all energy plans", IO::showAllEnergyPlans));
-        list.add(new OptionCommand<>("Show all energy suplliers name", IO::showAllEnergySuplliersName));
-        list.add(new OptionCommand<>("Show Date", IO::showTodaysDate));
+        list.add(new OptionCommand<>("Show all energy suplliers's name", IO::showAllEnergySuplliersName));
+        list.add(new OptionCommand<>("Show date", IO::showTodaysDate));
         return new Menu<>("Show information", list);
     }
 
@@ -671,7 +668,7 @@ public class IO implements IIO {
         list.add(new OptionCommand<>("Change energy plan", IO::changeEnergyPlan));
         list.add(new OptionCommand<>("Change Energy supllier discount", IO::changeEnergySupllierDiscount));
         list.add(new OptionCommand<>("Control devices", IO::controlDevices));
-        return new Menu<>("Control the Houses", list);
+        return new Menu<>("Houses options", list);
     }
 
     private MenuCatalog<IO> menuCatalog() {
