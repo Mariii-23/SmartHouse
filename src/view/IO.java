@@ -407,6 +407,7 @@ public class IO implements IIO {
         }
         try {
             List<Pair<String, Double>> result = this.state.energySuppliersRankedByInvoiceVolumeBetween(startDate, endDate);
+            IO.printLine("");
             result.forEach(e -> IO.printLine(e.getFirst() + " :: " + e.getSecond()));
         } catch (Exception e) {
             IO.showErrors("Error occurred");
@@ -494,7 +495,6 @@ public class IO implements IIO {
         IO.printLine("All energy plans\n");
         for (String energyPlan : this.state.getAllEnergyPlans()) {
             IO.printLine(energyPlan);
-            IO.printLine("");
         }
     }
 
@@ -505,11 +505,21 @@ public class IO implements IIO {
         }
     }
 
+    private void showDevice() {
+        try {
+            printLine( "\n" + getDevice().toString());
+        } catch (Exception e) {
+            IO.showErrors("Error occurred");
+            IO.showErrors(e);
+        }
+    }
+
     private Menu<IO> menuShow() {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
         list.add(new OptionCommand<>("Show all proprietaries", IO::showAllProprietaries));
         list.add(new OptionCommand<>("Show all proprietary's devices", IO::showAllDevicesByTin));
-        list.add(new OptionCommand<>("Show all proprietary's devices and Division", IO::showAllDevicesByTinAndDivision));
+        list.add(new OptionCommand<>("Show all proprietary's devices and division", IO::showAllDevicesByTinAndDivision));
+        list.add(new OptionCommand<>("Show device", IO::showDevice));
         list.add(new OptionCommand<>("Show all energy plans", IO::showAllEnergyPlans));
         list.add(new OptionCommand<>("Show all energy suplliers's name", IO::showAllEnergySuplliersName));
         list.add(new OptionCommand<>("Show date", IO::showTodaysDate));
@@ -522,9 +532,9 @@ public class IO implements IIO {
             showAllEnergySuplliersName();
             IO.printLine("");
             showAllEnergyPlans();
-            IO.print("Energy Supplier name");
+            IO.print("Energy Supplier name: ");
             String energySupplier = IO.readString();
-            IO.print("Energy Plan name");
+            IO.print("Energy Plan name: ");
             String energyPlan = IO.readString();
             this.state.changeEnergyPlan(energySupplier, energyPlan);
         } catch (Exception e) {
@@ -536,9 +546,9 @@ public class IO implements IIO {
     private void changeEnergySupllierDiscount() {
         try {
             showAllEnergySuplliersName();
-            IO.print("Energy Supplier name");
+            IO.print("\nEnergy Supplier name: ");
             String energySupplier = IO.readString();
-            IO.print("Discount");
+            IO.print("Discount: ");
             int discount = IO.readInt();
             this.state.changeEnergySupplierDiscount(energySupplier, discount);
         } catch (Exception e) {
@@ -577,7 +587,7 @@ public class IO implements IIO {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
         list.add(new OptionCommand<>("Turn OFF", IO::turnOffDeviceInDivision));
         list.add(new OptionCommand<>("Turn On", IO::turnOnDeviceInDivision));
-        var menu = new Menu<>("Control SmartCamera", list);
+        var menu = new Menu<>("Control SmartCamera", list, true);
         menu.runMenu(this);
     }
 
