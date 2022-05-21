@@ -42,11 +42,6 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
         return date;
     }
 
-    @Override
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
     public List<String> allEnergySuppliersName() {
         return this.energySuppliers.keySet().stream().toList();
     }
@@ -71,11 +66,6 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
                     name + "\" does not exist");
         }
         return e;
-    }
-
-    @Override
-    public boolean containsProprietary(String tin) {
-        return this.smartHousesByTIN.containsKey(tin);
     }
 
     @Override
@@ -119,22 +109,30 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
 
     @Override
     public void addSmartHouse(SmartHouse smartHouse)
-            throws EnergySupplierDoesNotExistException {
+        throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException {
         // check if the energy supplier exists
         if (energySuppliers.get(smartHouse.getEnergySupplierName()) == null) {
             throw new EnergySupplierDoesNotExistException("Energy Supplier \"" +
-                    smartHouse.getEnergySupplierName() + "\" does not exist");
+                smartHouse.getEnergySupplierName() + "\" does not exist");
         }
+        if (this.smartHousesByTIN.containsKey(smartHouse.getProprietaryTin()))
+            throw new ProprietaryAlreadyExistException(
+                "Proprietary with tin " + smartHouse.getProprietaryTin() + " already exists"
+            );
         smartHousesByTIN.put(smartHouse.getProprietaryTin(), smartHouse.clone());
     }
 
     @Override
     public void addSmartHouse(String name, String tin, String energySupplier)
-            throws EnergySupplierDoesNotExistException {
+        throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException {
         if (energySuppliers.get(energySupplier) == null) {
             throw new EnergySupplierDoesNotExistException("Energy Supplier \"" +
-                    energySupplier + "\" does not exist");
+                energySupplier + "\" does not exist");
         }
+        if (this.smartHousesByTIN.containsKey(tin))
+            throw new ProprietaryAlreadyExistException(
+                "Proprietary with tin " + tin + " already exists"
+            );
         smartHousesByTIN.put(tin, new SmartHouse(new Proprietary(name, tin), energySupplier));
     }
 

@@ -1,10 +1,7 @@
 package controller.parse;
 
 import controller.parse.exceptions.*;
-import model.DivisionDoesNotExistException;
-import model.EnergySupplierDoesNotExistException;
-import model.ISmartHousesManager;
-import model.ProprietaryDoesNotExistException;
+import model.*;
 import model.smart_house.DeviceDoesNotExistException;
 import model.smart_house.EnergySupplierAlreadyExistsException;
 import model.smart_house.WrongTypeOfDeviceException;
@@ -26,9 +23,9 @@ import java.util.regex.Pattern;
 
 public class ParseEvents {
     public static void fromFile(ISmartHousesManager smartHousesManager, String path)
-            throws IOException, ParseEventException, DeviceDoesNotExistException, ProprietaryDoesNotExistException,
-            DivisionDoesNotExistException, EnergySupplierDoesNotExistException, ClassNotFoundException,
-            WrongTypeOfDeviceException, EnergySupplierAlreadyExistsException {
+        throws IOException, ParseEventException, DeviceDoesNotExistException, ProprietaryDoesNotExistException,
+        DivisionDoesNotExistException, EnergySupplierDoesNotExistException, ClassNotFoundException,
+        WrongTypeOfDeviceException, EnergySupplierAlreadyExistsException, ProprietaryAlreadyExistException {
 
         List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
         Iterator<String> it = lines.iterator();

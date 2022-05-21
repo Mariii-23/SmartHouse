@@ -2,6 +2,7 @@ package view;
 
 import controller.IState;
 import model.DivisionDoesNotExistException;
+import model.ProprietaryAlreadyExistException;
 import model.ProprietaryDoesNotExistException;
 import model.energy_suppliers.Invoice;
 import model.smart_house.proprietary.Proprietary;
@@ -85,7 +86,7 @@ public class IO implements IIO {
         String filepath = IO.readString();
         try {
             this.state.readFromFile(filepath);
-        } catch (IOException e) {
+        } catch (IOException | ProprietaryAlreadyExistException e) {
             IO.showErrors(e);
             return;
         }
@@ -317,7 +318,7 @@ public class IO implements IIO {
     }
 
     private void showTodaysDate() {
-        LocalDate date = this.state.todaysDate();
+        LocalDate date = this.state.simulationDate();
         date.format(DateTimeFormatter.ISO_DATE);
         IO.printLine("Date :: " + date);
     }

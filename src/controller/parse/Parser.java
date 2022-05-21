@@ -2,6 +2,7 @@ package controller.parse;
 
 import model.EnergySupplierDoesNotExistException;
 import model.ISmartHousesManager;
+import model.ProprietaryAlreadyExistException;
 import model.SmartHousesManager;
 import model.smart_house.Division;
 import model.smart_house.EnergySupplierAlreadyExistsException;
@@ -22,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    public static ISmartHousesManager parse(String path) throws IOException {
+    public static ISmartHousesManager parse(String path) throws IOException, ProprietaryAlreadyExistException {
         List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
         Iterator<String> it = lines.iterator();
 

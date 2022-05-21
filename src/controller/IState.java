@@ -21,66 +21,71 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IState {
+    /**
+     * @param filepath the path of the object file
+     * @throws IOException            if an error occurs while reading the file
+     * @throws ClassNotFoundException when the object in the file is not the expected one
+     */
     void readFromObjectFile(final String filepath) throws IOException, ClassNotFoundException;
 
     void readFromFile(final String filepath) throws IOException;
 
     void readEventsFromFile(final String filepath) throws IOException,
-            EnergySupplierDoesNotExistException, DeviceDoesNotExistException,
-            ProprietaryDoesNotExistException, DivisionDoesNotExistException,
-            ParseEventException, WrongTypeOfDeviceException,
-            ClassNotFoundException, EnergySupplierAlreadyExistsException;
+        EnergySupplierDoesNotExistException, DeviceDoesNotExistException,
+        ProprietaryDoesNotExistException, DivisionDoesNotExistException,
+        ParseEventException, WrongTypeOfDeviceException, ClassNotFoundException,
+        EnergySupplierAlreadyExistsException, ProprietaryAlreadyExistException;
 
     void saveObjectFile(final String filepath) throws IOException;
 
     HashMap<String, List<SmartDevice>> allDevicesByTin(String tin)
-            throws ProprietaryDoesNotExistException;
+        throws ProprietaryDoesNotExistException;
 
     List<SmartDevice> allDevicesByTinAndDivision(String tin, String division)
-            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
+        throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
 
     List<Proprietary> allProprietaries();
 
     List<String> allEnergySuppliersName();
 
     void addSmartHouse(String tin, String proprietaryName, String energySupplier)
-            throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException;
+        throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException;
 
     void addSmartSpeaker(final String division, String proprietary, final float fixedConsumption,
                          final int volume, final String channel, final String brand)
-            throws ProprietaryDoesNotExistException;
+        throws ProprietaryDoesNotExistException;
 
     void addSmartCamera(final String division, String proprietary, final float fixedConsumption,
                         final int width, final int height, final float fileSize)
-            throws ProprietaryDoesNotExistException;
+        throws ProprietaryDoesNotExistException;
 
     void addSmartBulb(String division, String proprietary, float fixedConsumption,
                       String toneName, float diameter)
-            throws ProprietaryDoesNotExistException, NoSuchToneException;
+        throws ProprietaryDoesNotExistException, NoSuchToneException;
 
     void addEnergySupplier(String energySupplierName) throws EnergySupplierAlreadyExistsException;
 
     // control devices
     void smartBulbChangeTone(String tin, String division, int id, String toneName)
-            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-            ProprietaryDoesNotExistException, WrongTypeOfDeviceException, NoSuchToneException;
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+        ProprietaryDoesNotExistException, WrongTypeOfDeviceException, NoSuchToneException;
 
     void smartSpeakerVolumeDown(String tin, String division, int id)
-            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-            ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+        ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
 
     void smartSpeakerVolumeUp(String tin, String division, int id)
-            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-            ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+        ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
 
 
     String[] getAllEnergyPlans();
 
     void changeEnergyPlan(String energySupplierName, String energyPlanName)
-            throws EnergySupplierDoesNotExistException, ClassNotFoundException;
+        throws EnergySupplierDoesNotExistException, ClassNotFoundException;
 
     void changeEnergySupplierDiscount(String energySupplierName, int discount)
-            throws EnergySupplierDoesNotExistException;
+        throws EnergySupplierDoesNotExistException;
 
     LocalDate todaysDate();
 
@@ -93,10 +98,10 @@ public interface IState {
     void turnOnAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
 
     void turnOffDeviceInDivision(String tin, String division, int id)
-            throws DivisionDoesNotExistException, ProprietaryDoesNotExistException, DeviceDoesNotExistException;
+        throws DivisionDoesNotExistException, ProprietaryDoesNotExistException, DeviceDoesNotExistException;
 
     void turnOnDeviceInDivision(String tin, String division, int id)
-            throws DivisionDoesNotExistException, ProprietaryDoesNotExistException, DeviceDoesNotExistException;
+        throws DivisionDoesNotExistException, ProprietaryDoesNotExistException, DeviceDoesNotExistException;
 
     Optional<Pair<String, Double>> highestProfitSupplier();
 

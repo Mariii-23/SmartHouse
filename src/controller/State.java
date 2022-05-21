@@ -7,7 +7,6 @@ import model.*;
 import model.energy_suppliers.Invoice;
 import model.smart_house.DeviceDoesNotExistException;
 import model.smart_house.EnergySupplierAlreadyExistsException;
-import model.smart_house.SmartHouse;
 import model.smart_house.WrongTypeOfDeviceException;
 import model.smart_house.proprietary.Proprietary;
 import model.smart_house.smart_devices.SmartDevice;
@@ -31,7 +30,7 @@ public class State implements IState {
         this.smartHousesManager = new SmartHousesManager();
     }
 
-    public LocalDate todaysDate() {
+    public LocalDate simulationDate() {
         return this.smartHousesManager.getDate();
     }
 
@@ -47,11 +46,15 @@ public class State implements IState {
         this.smartHousesManager = SmartHousesManager.readObjectFile(filepath);
     }
 
-    public void readFromFile(final String filepath) throws IOException {
+    public void readFromFile(final String filepath) throws IOException, ProprietaryAlreadyExistException {
         this.smartHousesManager = Parser.parse(filepath);
     }
 
-    public void readEventsFromFile(final String filepath) throws IOException, EnergySupplierDoesNotExistException, DeviceDoesNotExistException, ProprietaryDoesNotExistException, DivisionDoesNotExistException, ParseEventException, WrongTypeOfDeviceException, ClassNotFoundException, EnergySupplierAlreadyExistsException {
+    public void readEventsFromFile(final String filepath)
+        throws IOException, EnergySupplierDoesNotExistException, DeviceDoesNotExistException,
+        ProprietaryDoesNotExistException, DivisionDoesNotExistException, ParseEventException,
+        WrongTypeOfDeviceException, ClassNotFoundException, EnergySupplierAlreadyExistsException,
+        ProprietaryAlreadyExistException {
         ParseEvents.fromFile(this.smartHousesManager, filepath);
     }
 
@@ -93,13 +96,7 @@ public class State implements IState {
 
     public void addSmartHouse(String tin, String proprietaryName, String energySupplier)
             throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException {
-        if (this.smartHousesManager.containsProprietary(tin))
-            throw new ProprietaryAlreadyExistException(
-                    "Proprietary with tin " + tin + " already exists"
-            );
-        Proprietary proprietary = new Proprietary(proprietaryName, tin);
-        SmartHouse smartHouse = new SmartHouse(proprietary, energySupplier);
-        this.smartHousesManager.addSmartHouse(smartHouse);
+        this.smartHousesManager.addSmartHouse(proprietaryName, tin, energySupplier);
     }
 
     public void addSmartSpeaker(final String division, String proprietary, final float fixedConsumption,
