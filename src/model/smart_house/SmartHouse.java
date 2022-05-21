@@ -124,17 +124,17 @@ public class SmartHouse implements Serializable {
         div.smartSpeakerVolumeDown(id);
     }
 
-    public HashMap<String, List<String>> getAllDevices() {
-        HashMap<String, List<String>> result = new HashMap<>();
-        this.divisionsByName.forEach((key, value) -> result.put(key, value.getAllDevicesName()));
+    public HashMap<String, List<SmartDevice>> getAllDevices() {
+        HashMap<String, List<SmartDevice>> result = new HashMap<>();
+        this.divisionsByName.forEach((key, value) -> result.put(key, value.getAllDevices()));
         return result;
     }
 
-    public List<String> getAllDevicesByDivision(String divisionName) throws DivisionDoesNotExistException {
-        var division = this.divisionsByName.get(divisionName);
+    public List<SmartDevice> getAllDevicesByDivision(String divisionName) throws DivisionDoesNotExistException {
+        Division division = this.divisionsByName.get(divisionName);
         if(division == null)
             throw new DivisionDoesNotExistException("Division does not exist : " + divisionName);
-        return division.getAllDevicesName();
+        return division.getAllDevices();
     }
 
     @Override

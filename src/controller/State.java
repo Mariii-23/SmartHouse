@@ -4,7 +4,9 @@ import controller.parse.Parser;
 import model.*;
 import model.energy_suppliers.Invoice;
 import model.smart_house.DeviceDoesNotExistException;
+import model.smart_house.EnergySupplierAlreadyExistsException;
 import model.smart_house.SmartHouse;
+import model.smart_house.WrongTypeOfDeviceException;
 import model.smart_house.proprietary.Proprietary;
 import model.smart_house.smart_devices.SmartDevice;
 import model.smart_house.smart_devices.bulb.NoSuchToneException;
@@ -35,6 +37,10 @@ public class State implements IState {
         this.smartHousesManager.skipDays(numDays);
     }
 
+    public  void skipToDate(LocalDate newDate) {
+        this.smartHousesManager.skipToDate(newDate);
+    }
+
     public void readFromObjectFile(final String filepath) throws IOException, ClassNotFoundException {
         this.smartHousesManager = SmartHousesManager.readObjectFile(filepath);
     }
@@ -51,14 +57,32 @@ public class State implements IState {
         return this.smartHousesManager.allProprietaries();
     }
 
-    public HashMap<String, List<String>> allDevicesByTin(String tin)
+    public List<String> allEnergySuppliersName() {
+        return this.smartHousesManager.allEnergySuppliersName();
+    }
+
+    public HashMap<String, List<SmartDevice>> allDevicesByTin(String tin)
         throws ProprietaryDoesNotExistException {
         return this.smartHousesManager.allDevicesByTin(tin);
     }
 
-    public List<String> allDevicesByTinAndDivision(String tin, String division)
+    public List<SmartDevice> allDevicesByTinAndDivision(String tin, String division)
         throws ProprietaryDoesNotExistException, DivisionDoesNotExistException {
         return this.smartHousesManager.allDevicesByTinAndDivision(tin, division);
+    }
+
+    public String[] getAllEnergyPlans() {
+        return this.smartHousesManager.getAllEnergyPlans();
+    }
+
+    public void changeEnergyPlan(String energySupplierName, String energyPlanName)
+            throws EnergySupplierDoesNotExistException, ClassNotFoundException {
+        this.smartHousesManager.changeEnergyPlan(energySupplierName, energyPlanName);
+    }
+
+    public void changeEnergySupplierDiscount(String energySupplierName, int discount)
+            throws EnergySupplierDoesNotExistException {
+        this.smartHousesManager.changeEnergySupplierDiscount(energySupplierName,discount);
     }
 
     public void addSmartHouse( String tin, String proprietaryName, String energySupplier)
@@ -96,6 +120,35 @@ public class State implements IState {
         }
         SmartDevice device = new SmartBulb(fixedConsumption, tone, diameter);
         this.smartHousesManager.addSmartDeviceToHouse(proprietary, division, device);
+    }
+
+    public void addEnergySupplier(String energySupplierName) throws EnergySupplierAlreadyExistsException {
+        this.smartHousesManager.addEnergySupplier(energySupplierName);
+    }
+
+    // control devices
+    public void smartBulbChangeTone(String tin, String division, int id, String toneName)
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException, NoSuchToneException {
+        Tone tone;
+        try {
+            tone = Tone.valueOf(toneName.toUpperCase());
+        } catch (Exception e) {
+            throw new NoSuchToneException("No shuch tone : " + toneName.toUpperCase());
+        }
+        this.smartHousesManager.smartBulbChangeTone(tin,division,id,tone);
+    }
+
+    public void smartSpeakerVolumeDown(String tin, String division, int id)
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException {
+        this.smartHousesManager.smartSpeakerVolumeDown(tin,division,id);
+    }
+
+    public void smartSpeakerVolumeUp(String tin, String division, int id)
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException {
+        this.smartHousesManager.smartSpeakerVolumeUp(tin,division,id);
     }
 
     public void turnOffAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException {

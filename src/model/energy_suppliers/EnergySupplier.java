@@ -34,7 +34,7 @@ public class EnergySupplier implements Serializable {
     }
 
     public float energyCost(int numDevices, float devicesConsumption) {
-        return this.energyPlan.energyCost(numDevices, devicesConsumption) * this.discount / 100.f;
+        return this.energyPlan.energyCost(numDevices, devicesConsumption) * (100 - this.discount) / 100.f;
     }
 
     public void addInvoice(Invoice invoice, String proprietaryTin) {

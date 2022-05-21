@@ -56,5 +56,16 @@ public class SmartCamera extends SmartDevice implements Serializable {
     public SmartCamera clone() {
         return new SmartCamera(this);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SmartCamera\n");
+        sb.append("Width :: ").append(width).append("\n");
+        sb.append("Height  :: ").append(height).append("\n");
+        sb.append("File Size  :: ").append(fileSize).append("\n");
+        sb.append(super.toString());
+        return sb.toString();
+    }
 }
 

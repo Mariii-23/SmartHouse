@@ -77,4 +77,15 @@ public class SmartSpeaker extends SmartDevice implements Serializable {
     public SmartSpeaker clone() {
         return new SmartSpeaker(this);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SmartSpeaker\n");
+        sb.append("Volume :: ").append(volume).append("\n");
+        sb.append("Channel  :: ").append(channel).append("\n");
+        sb.append("Brand :: ").append(brand).append("\n");
+        sb.append(super.toString());
+        return sb.toString();
+    }
 }

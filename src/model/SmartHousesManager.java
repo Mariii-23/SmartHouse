@@ -4,6 +4,7 @@ import model.energy_suppliers.EnergySupplier;
 import model.energy_suppliers.Invoice;
 import model.energy_suppliers.energy_plans.EnergyPlan;
 import model.smart_house.DeviceDoesNotExistException;
+import model.smart_house.EnergySupplierAlreadyExistsException;
 import model.smart_house.SmartHouse;
 import model.smart_house.WrongTypeOfDeviceException;
 import model.smart_house.proprietary.Proprietary;
@@ -37,6 +38,10 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
         this.date = date;
     }
 
+    public List<String> allEnergySuppliersName() {
+        return this.energySuppliers.keySet().stream().toList();
+    }
+
     @Override
     public List<Proprietary> allProprietaries() {
         return this.smartHousesByTIN.values().stream().map(SmartHouse::getProprietary).collect(Collectors.toList());
@@ -66,21 +71,24 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
     }
 
     @Override
-    public HashMap<String, List<String>> allDevicesByTin(String tin)
+    public HashMap<String, List<SmartDevice>> allDevicesByTin(String tin)
         throws ProprietaryDoesNotExistException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
         return smartHouse.getAllDevices();
     }
 
     @Override
-    public List<String> allDevicesByTinAndDivision(String tin, String division)
+    public List<SmartDevice> allDevicesByTinAndDivision(String tin, String division)
         throws ProprietaryDoesNotExistException, DivisionDoesNotExistException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
         return smartHouse.getAllDevicesByDivision(division);
     }
 
     @Override
-    public void addEnergySupplier(String energySupplierName) {
+    public void addEnergySupplier(String energySupplierName) throws EnergySupplierAlreadyExistsException {
+        if (energySuppliers.get(energySupplierName) != null) {
+            throw new EnergySupplierAlreadyExistsException("Energy supplier [" + energySupplierName + "] already exists");
+        }
         energySuppliers.put(energySupplierName, new EnergySupplier(energySupplierName));
     }
 

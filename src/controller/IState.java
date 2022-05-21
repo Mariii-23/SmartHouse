@@ -6,7 +6,10 @@ import model.ProprietaryAlreadyExistException;
 import model.ProprietaryDoesNotExistException;
 import model.energy_suppliers.Invoice;
 import model.smart_house.DeviceDoesNotExistException;
+import model.smart_house.EnergySupplierAlreadyExistsException;
+import model.smart_house.WrongTypeOfDeviceException;
 import model.smart_house.proprietary.Proprietary;
+import model.smart_house.smart_devices.SmartDevice;
 import model.smart_house.smart_devices.bulb.NoSuchToneException;
 import utils.Pair;
 
@@ -23,13 +26,14 @@ public interface IState {
 
     void saveObjectFile(final String filepath) throws IOException;
 
-    HashMap<String, List<String>> allDevicesByTin(String tin)
+    HashMap<String, List<SmartDevice>> allDevicesByTin(String tin)
         throws ProprietaryDoesNotExistException;
 
-    List<String> allDevicesByTinAndDivision(String tin, String division)
+    List<SmartDevice> allDevicesByTinAndDivision(String tin, String division)
         throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
 
     List<Proprietary> allProprietaries();
+    List<String> allEnergySuppliersName();
 
     void addSmartHouse(String tin, String proprietaryName, String energySupplier)
         throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException;
@@ -46,13 +50,32 @@ public interface IState {
                               String toneName, float diameter)
             throws ProprietaryDoesNotExistException, NoSuchToneException;
 
-    //void createNewEnegySupplier();
+    void addEnergySupplier(String energySupplierName) throws EnergySupplierAlreadyExistsException;
 
-    //void changeSupplierToASmartHouse();
-    //void changeValuesSupllier();
+    // control devices
+    void smartBulbChangeTone(String tin, String division, int id, String toneName)
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException, NoSuchToneException;
+
+    void smartSpeakerVolumeDown(String tin, String division, int id)
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
+
+    void smartSpeakerVolumeUp(String tin, String division, int id)
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
+
+
+
+    String[] getAllEnergyPlans();
+    void changeEnergyPlan(String energySupplierName, String energyPlanName)
+            throws EnergySupplierDoesNotExistException, ClassNotFoundException;
+    void changeEnergySupplierDiscount(String energySupplierName, int discount)
+            throws EnergySupplierDoesNotExistException;
 
     LocalDate todaysDate();
     void skipDays(int numdays);
+    void skipToDate(LocalDate newDate);
 
     void turnOffAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
     void turnOnAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException;

@@ -2,6 +2,7 @@ package model;
 
 import model.energy_suppliers.Invoice;
 import model.smart_house.DeviceDoesNotExistException;
+import model.smart_house.EnergySupplierAlreadyExistsException;
 import model.smart_house.SmartHouse;
 import model.smart_house.WrongTypeOfDeviceException;
 import model.smart_house.proprietary.Proprietary;
@@ -21,7 +22,7 @@ public interface ISmartHousesManager {
 
     // events
     // energy supplier
-    void addEnergySupplier(String energySupplierName);
+    void addEnergySupplier(String energySupplierName) throws EnergySupplierAlreadyExistsException;
 
     String[] getAllEnergyPlans();
 
@@ -68,7 +69,6 @@ public interface ISmartHousesManager {
 
     void skipToDate(LocalDate newDate);
 
-
     // queries
     Optional<Pair<String, Double>> highestProfitSupplier();
 
@@ -80,13 +80,13 @@ public interface ISmartHousesManager {
 
     List<Pair<Proprietary, Double>> proprietariesRankedByEnergyConsumptionBetween(LocalDate startDate, LocalDate endDate);
 
-    HashMap<String, List<String>> allDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
+    HashMap<String, List<SmartDevice>> allDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
 
-    List<String> allDevicesByTinAndDivision(String tin, String division)
+    List<SmartDevice> allDevicesByTinAndDivision(String tin, String division)
         throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
 
     List<Proprietary> allProprietaries();
-
+    List<String> allEnergySuppliersName();
 
     void saveObjectFile(String filename) throws IOException;
 }

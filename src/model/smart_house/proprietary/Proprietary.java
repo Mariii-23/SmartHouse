@@ -20,6 +20,10 @@ public class Proprietary implements Serializable {
         return tin;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public Proprietary clone() {
         return new Proprietary(this);

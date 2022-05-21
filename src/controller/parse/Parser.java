@@ -4,6 +4,7 @@ import model.EnergySupplierDoesNotExistException;
 import model.ISmartHousesManager;
 import model.SmartHousesManager;
 import model.smart_house.Division;
+import model.smart_house.EnergySupplierAlreadyExistsException;
 import model.smart_house.SmartHouse;
 import model.smart_house.proprietary.Proprietary;
 import model.smart_house.smart_devices.bulb.SmartBulb;
@@ -32,7 +33,11 @@ public class Parser {
             String[] splitLine = nextLine.split(":", 2);
             switch (splitLine[0]) {
                 case "Fornecedor" -> {
-                    smartHousesManager.addEnergySupplier(splitLine[1]);
+                    try {
+                        smartHousesManager.addEnergySupplier(splitLine[1]);
+                    } catch (EnergySupplierAlreadyExistsException e) {
+                        e.printStackTrace();
+                    }
                     nextLine = it.hasNext() ? it.next() : null;
                 }
                 case "Casa" -> {

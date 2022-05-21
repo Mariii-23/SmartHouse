@@ -52,4 +52,14 @@ public class SmartBulb extends SmartDevice implements Serializable {
     public SmartBulb clone() {
         return new SmartBulb(this);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SmartBulb\n");
+        sb.append("Tone :: ").append(tone.toString()).append("\n")
+                .append("Diameter :: ").append(diameter).append("\n");
+        sb.append(super.toString());
+        return sb.toString();
+    }
 }

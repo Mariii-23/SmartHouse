@@ -46,4 +46,12 @@ public abstract class SmartDevice implements Serializable {
     public abstract SmartDevice clone();
 
     public abstract String getSimpleName();
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Fixed Consumption :: ").append(fixedConsumption).append("\n");
+        sb.append("ON :: ").append(on).append("\n");
+        return sb.toString();
+    }
 }
