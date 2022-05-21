@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
 
 public class ParseEvents {
     public static void fromFile(ISmartHousesManager smartHousesManager, String path)
-        throws IOException, ParseEventException, DeviceDoesNotExistException, ProprietaryDoesNotExistException,
-        DivisionDoesNotExistException, EnergySupplierDoesNotExistException, ClassNotFoundException,
-        WrongTypeOfDeviceException, EnergySupplierAlreadyExistsException {
+            throws IOException, ParseEventException, DeviceDoesNotExistException, ProprietaryDoesNotExistException,
+            DivisionDoesNotExistException, EnergySupplierDoesNotExistException, ClassNotFoundException,
+            WrongTypeOfDeviceException, EnergySupplierAlreadyExistsException {
 
         List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
         Iterator<String> it = lines.iterator();
@@ -99,21 +99,21 @@ public class ParseEvents {
         try {
             return switch (ctorName) {
                 case "SmartBulb" -> new SmartBulb(
-                    Float.parseFloat(args[0]),
-                    Tone.valueOf(args[1].toUpperCase()),
-                    Float.parseFloat(args[2])
+                        Float.parseFloat(args[0]),
+                        Tone.valueOf(args[1].toUpperCase()),
+                        Float.parseFloat(args[2])
                 );
                 case "SmartSpeaker" -> new SmartSpeaker(
-                    Float.parseFloat(args[0]),
-                    Integer.parseInt(args[1]),
-                    args[2],
-                    args[3]
+                        Float.parseFloat(args[0]),
+                        Integer.parseInt(args[1]),
+                        args[2],
+                        args[3]
                 );
                 case "SmartCamera" -> new SmartCamera(
-                    Float.parseFloat(args[0]),
-                    Integer.parseInt(args[1]),
-                    Integer.parseInt(args[2]),
-                    Float.parseFloat(args[3])
+                        Float.parseFloat(args[0]),
+                        Integer.parseInt(args[1]),
+                        Integer.parseInt(args[2]),
+                        Float.parseFloat(args[3])
                 );
                 default -> throw new FunctionNotDefinedException("Smart Device " + ctorName + " is not defined");
             };

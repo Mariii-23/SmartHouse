@@ -2,7 +2,7 @@ package utils;
 
 import java.util.Objects;
 
-public class Pair<T,U> {
+public class Pair<T, U> {
     private T first;
     private U second;
 

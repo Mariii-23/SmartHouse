@@ -81,8 +81,8 @@ public class Invoice implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Company Name :: ").append(companyName).append("\n");
-        sb.append("Daily Consumption :: ").append(dailyConsumption).append("\n");
-        sb.append("Daily Cost :: ").append(dailyCost).append("\n");
+        sb.append("Daily Consumption :: ").append(getDailyConsumption()).append("\n");
+        sb.append("Daily Cost :: ").append(getCost()).append("\n");
         sb.append("Start Date :: ").append(startDate).append("\n");
         sb.append("End Date :: ").append(endDate).append("\n");
         return sb.toString();

@@ -28,6 +28,15 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
         date = LocalDate.now();
     }
 
+    public static SmartHousesManager readObjectFile(String filename) throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(filename);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        SmartHousesManager smartHousesManager = (SmartHousesManager) ois.readObject();
+        ois.close();
+        fis.close();
+        return smartHousesManager;
+    }
+
     @Override
     public LocalDate getDate() {
         return date;
@@ -59,11 +68,10 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
         EnergySupplier e = energySuppliers.get(name);
         if (e == null) {
             throw new EnergySupplierDoesNotExistException("Energy Supplier \"" +
-                name + "\" does not exist");
+                    name + "\" does not exist");
         }
         return e;
     }
-
 
     @Override
     public boolean containsProprietary(String tin) {
@@ -72,14 +80,14 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
 
     @Override
     public HashMap<String, List<SmartDevice>> allDevicesByTin(String tin)
-        throws ProprietaryDoesNotExistException {
+            throws ProprietaryDoesNotExistException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
         return smartHouse.getAllDevices();
     }
 
     @Override
     public List<SmartDevice> allDevicesByTinAndDivision(String tin, String division)
-        throws ProprietaryDoesNotExistException, DivisionDoesNotExistException {
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
         return smartHouse.getAllDevicesByDivision(division);
     }
@@ -99,40 +107,40 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
 
     @Override
     public void changeEnergyPlan(String energySupplierName, String energyPlanName)
-        throws EnergySupplierDoesNotExistException, ClassNotFoundException {
+            throws EnergySupplierDoesNotExistException, ClassNotFoundException {
         getEnergySupplier(energySupplierName).setEnergyPlan(energyPlanName);
     }
 
     @Override
     public void changeEnergySupplierDiscount(String energySupplierName, int discount)
-        throws EnergySupplierDoesNotExistException {
+            throws EnergySupplierDoesNotExistException {
         getEnergySupplier(energySupplierName).setDiscount(discount);
     }
 
     @Override
     public void addSmartHouse(SmartHouse smartHouse)
-        throws EnergySupplierDoesNotExistException {
+            throws EnergySupplierDoesNotExistException {
         // check if the energy supplier exists
         if (energySuppliers.get(smartHouse.getEnergySupplierName()) == null) {
             throw new EnergySupplierDoesNotExistException("Energy Supplier \"" +
-                smartHouse.getEnergySupplierName() + "\" does not exist");
+                    smartHouse.getEnergySupplierName() + "\" does not exist");
         }
         smartHousesByTIN.put(smartHouse.getProprietaryTin(), smartHouse.clone());
     }
 
     @Override
     public void addSmartHouse(String name, String tin, String energySupplier)
-        throws EnergySupplierDoesNotExistException {
+            throws EnergySupplierDoesNotExistException {
         if (energySuppliers.get(energySupplier) == null) {
             throw new EnergySupplierDoesNotExistException("Energy Supplier \"" +
-                energySupplier + "\" does not exist");
+                    energySupplier + "\" does not exist");
         }
         smartHousesByTIN.put(tin, new SmartHouse(new Proprietary(name, tin), energySupplier));
     }
 
     @Override
     public void addSmartDeviceToHouse(String tin, String division, SmartDevice smartDevice)
-        throws ProprietaryDoesNotExistException {
+            throws ProprietaryDoesNotExistException {
         SmartHouse smartHouse = smartHousesByTIN.get(tin);
         if (smartHouse == null) {
             throw new ProprietaryDoesNotExistException("Proprietary with tin \"" + tin + "\" does not exist");
@@ -167,38 +175,38 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
 
     @Override
     public void turnOnDeviceInDivision(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
         smartHouse.turnOnDeviceInDivision(division, id);
     }
 
     @Override
     public void smartBulbChangeTone(String tin, String division, int id, Tone tone)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-        ProprietaryDoesNotExistException, WrongTypeOfDeviceException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
         smartHouse.smartBulbChangeTone(division, id, tone);
     }
 
     @Override
     public void smartSpeakerVolumeDown(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-        ProprietaryDoesNotExistException, WrongTypeOfDeviceException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
         smartHouse.smartSpeakerVolumeDown(division, id);
     }
 
     @Override
     public void smartSpeakerVolumeUp(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-        ProprietaryDoesNotExistException, WrongTypeOfDeviceException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
         smartHouse.smartSpeakerVolumeUp(division, id);
     }
 
     @Override
     public void turnOffDeviceInDivision(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
         smartHouse.turnOffDeviceInDivision(division, id);
     }
@@ -210,8 +218,8 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
             float dailyConsumption = smartHouse.getEnergyConsumption();
             float dailyEnergyCost = energySupplier.energyCost(smartHouse.getNumDevices(), dailyConsumption);
             energySupplier.addInvoice(
-                new Invoice(energySupplier.getName(), dailyConsumption, dailyEnergyCost, date, newDate),
-                smartHouse.getProprietaryTin()
+                    new Invoice(energySupplier.getName(), dailyConsumption, dailyEnergyCost, date, newDate),
+                    smartHouse.getProprietaryTin()
             );
         }
     }
@@ -219,19 +227,19 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
     @Override
     public Optional<Pair<String, Double>> highestProfitSupplier() {
         return energySuppliers.entrySet()
-            .stream()
-            .map(kv -> new Pair<>(kv.getKey(), kv.getValue().invoiceVolume()))
-            .max(Comparator.comparing(Pair::getSecond));
+                .stream()
+                .map(kv -> new Pair<>(kv.getKey(), kv.getValue().invoiceVolume()))
+                .max(Comparator.comparing(Pair::getSecond));
     }
 
     @Override
     public Optional<Pair<String, Double>> mostCostlyHouseBetween(LocalDate startDate, LocalDate endDate) {
         return energySuppliers.values()
-            .stream()
-            .map(energySupplier -> energySupplier.mostCostlyHouseBetween(startDate, endDate))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .max(Comparator.comparing(Pair::getSecond));
+                .stream()
+                .map(energySupplier -> energySupplier.mostCostlyHouseBetween(startDate, endDate))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .max(Comparator.comparing(Pair::getSecond));
     }
 
     @Override
@@ -245,33 +253,24 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
     @Override
     public List<Pair<String, Double>> energySuppliersRankedByInvoiceVolumeBetween(LocalDate startDate, LocalDate endDate) {
         return this.energySuppliers.values()
-            .stream()
-            .map(e -> new Pair<>(e.getName(), e.invoiceVolumeBetween(startDate, endDate)))
-            .sorted((e1, e2) -> Double.compare(e2.getSecond(), e1.getSecond()))
-            .collect(Collectors.toList());
+                .stream()
+                .map(e -> new Pair<>(e.getName(), e.invoiceVolumeBetween(startDate, endDate)))
+                .sorted((e1, e2) -> Double.compare(e2.getSecond(), e1.getSecond()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Pair<Proprietary, Double>> proprietariesRankedByEnergyConsumptionBetween(LocalDate startDate, LocalDate endDate) {
         return this.energySuppliers.values()
-            .stream()
-            .map(e -> e.proprietariesEnergyConsumptionBetween(startDate, endDate))
-            .flatMap(m -> m.entrySet().stream())
-            .collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.summingDouble(Map.Entry::getValue)))
-            .entrySet()
-            .stream()
-            .map(kv -> new Pair<>(smartHousesByTIN.get(kv.getKey()).getProprietary(), kv.getValue()))
-            .sorted((e1, e2) -> Double.compare(e2.getSecond(), e1.getSecond()))
-            .collect(Collectors.toList());
-    }
-
-    public static SmartHousesManager readObjectFile(String filename) throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(filename);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        SmartHousesManager smartHousesManager = (SmartHousesManager) ois.readObject();
-        ois.close();
-        fis.close();
-        return smartHousesManager;
+                .stream()
+                .map(e -> e.proprietariesEnergyConsumptionBetween(startDate, endDate))
+                .flatMap(m -> m.entrySet().stream())
+                .collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.summingDouble(Map.Entry::getValue)))
+                .entrySet()
+                .stream()
+                .map(kv -> new Pair<>(smartHousesByTIN.get(kv.getKey()).getProprietary(), kv.getValue()))
+                .sorted((e1, e2) -> Double.compare(e2.getSecond(), e1.getSecond()))
+                .collect(Collectors.toList());
     }
 
     @Override

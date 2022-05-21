@@ -46,12 +46,12 @@ public class SmartSpeaker extends SmartDevice implements Serializable {
         return this.volume;
     }
 
-    public void setChannel(String newChannel) {
-        this.channel = newChannel;
-    }
-
     public String getChannel() {
         return this.channel;
+    }
+
+    public void setChannel(String newChannel) {
+        this.channel = newChannel;
     }
 
     public String getBrand() {

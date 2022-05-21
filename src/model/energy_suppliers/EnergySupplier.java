@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 public class EnergySupplier implements Serializable {
     private final String name;
+    private final HashMap<String, List<Invoice>> invoicesByProprietaryTin;
     private EnergyPlan energyPlan;
     private int discount;
-    private final HashMap<String, List<Invoice>> invoicesByProprietaryTin;
 
     public EnergySupplier(String name) {
         this.name = name;
@@ -44,17 +44,17 @@ public class EnergySupplier implements Serializable {
 
     public List<Invoice> getInvoices() {
         return this.invoicesByProprietaryTin.values().stream()
-            .flatMap(list -> list.stream().map(Invoice::clone))
-            .collect(Collectors.toList());
+                .flatMap(list -> list.stream().map(Invoice::clone))
+                .collect(Collectors.toList());
     }
 
     public double invoiceVolume() {
         return this.invoicesByProprietaryTin
-            .values()
-            .stream()
-            .flatMap(Collection::stream)
-            .mapToDouble(Invoice::getCost)
-            .sum();
+                .values()
+                .stream()
+                .flatMap(Collection::stream)
+                .mapToDouble(Invoice::getCost)
+                .sum();
     }
 
     public double invoiceVolumeBetween(LocalDate startDate, LocalDate endDate) {

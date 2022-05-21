@@ -49,7 +49,7 @@ public class MenuCatalog<T> {
     }
 
     public Boolean isValid() {
-        return this.option - 1 >= 0 && this.option - 1  < this.menus.size();
+        return this.option - 1 >= 0 && this.option - 1 < this.menus.size();
     }
 
     public String showMenus() {

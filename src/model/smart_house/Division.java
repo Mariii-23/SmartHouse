@@ -30,9 +30,9 @@ public class Division implements Serializable {
 
     public List<SmartDevice> getSmartDevices() {
         return smartDevices
-            .stream()
-            .map(SmartDevice::clone)
-            .collect(Collectors.toList());
+                .stream()
+                .map(SmartDevice::clone)
+                .collect(Collectors.toList());
     }
 
     public void addSmartDevice(SmartDevice smartDevice) {
@@ -56,7 +56,7 @@ public class Division implements Serializable {
     }
 
     public void smartBulbChangeTone(int id, Tone tone)
-        throws DeviceDoesNotExistException, WrongTypeOfDeviceException {
+            throws DeviceDoesNotExistException, WrongTypeOfDeviceException {
         try {
             SmartDevice d = smartDevices.get(id);
             if (d instanceof SmartBulb) {
@@ -70,7 +70,7 @@ public class Division implements Serializable {
     }
 
     public void smartSpeakerVolumeDown(int id)
-        throws DeviceDoesNotExistException, WrongTypeOfDeviceException {
+            throws DeviceDoesNotExistException, WrongTypeOfDeviceException {
         try {
             SmartDevice d = smartDevices.get(id);
             if (d instanceof SmartSpeaker) {
@@ -84,7 +84,7 @@ public class Division implements Serializable {
     }
 
     public void smartSpeakerVolumeUp(int id)
-        throws DeviceDoesNotExistException, WrongTypeOfDeviceException {
+            throws DeviceDoesNotExistException, WrongTypeOfDeviceException {
         try {
             SmartDevice d = smartDevices.get(id);
             if (d instanceof SmartSpeaker) {
@@ -107,9 +107,9 @@ public class Division implements Serializable {
 
     public float getEnergyConsumption() {
         return (float) smartDevices
-            .stream()
-            .mapToDouble(SmartDevice::getEnergyConsumption)
-            .sum();
+                .stream()
+                .mapToDouble(SmartDevice::getEnergyConsumption)
+                .sum();
     }
 
     public int getNumDevices() {

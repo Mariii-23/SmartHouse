@@ -29,6 +29,10 @@ public class IO implements IIO {
     private Optional<String> division = Optional.empty();
     private int id = -1;
 
+    public IO(IState state) {
+        this.state = state;
+    }
+
     public static void print(String string) {
         System.out.print(string);
     }
@@ -68,11 +72,7 @@ public class IO implements IIO {
         int month = IO.readInt();
         IO.print("Day: ");
         int day = IO.readInt();
-        return LocalDate.of(year,month,day);
-    }
-
-    public IO(IState state) {
-        this.state = state;
+        return LocalDate.of(year, month, day);
     }
 
     private String readTinProprietary() {
@@ -104,6 +104,18 @@ public class IO implements IIO {
         IO.printLine("File read with success");
     }
 
+    private void readEvents() {
+        IO.printLine("Enter the name of file to be read:");
+        String filepath = IO.readString();
+        try {
+            this.state.readEventsFromFile(filepath);
+        } catch (Exception e) {
+            IO.showErrors(e);
+            return;
+        }
+        IO.printLine("File read with success");
+    }
+
     private void saveObjectFile() {
         IO.printLine("Enter the name of file to be saved:");
         try {
@@ -118,10 +130,11 @@ public class IO implements IIO {
 
     private Menu<IO> menuReadSaveState() {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
-        list.add(new OptionCommand<>("Read file by name", IO::readFromFile,true));
-        list.add(new OptionCommand<>("Read object file by name", IO::readFromObjectFile, true));
-        list.add(new OptionCommand<>("Save object file by name", IO::saveObjectFile, true));
-        return new Menu<>("Write and save state options",list,true);
+        list.add(new OptionCommand<>("Read logs file", IO::readFromFile, true));
+        list.add(new OptionCommand<>("Read object file", IO::readFromObjectFile, true));
+        list.add(new OptionCommand<>("Save object file", IO::saveObjectFile, true));
+        list.add(new OptionCommand<>("Read events file", IO::readEvents, true));
+        return new Menu<>("Write and save state options", list, true);
     }
 
     /*** Create new Devices, Houses, EnergySupplier */
@@ -134,7 +147,7 @@ public class IO implements IIO {
             String name = IO.readString();
             IO.print("Enter the name of the energy supplier: ");
             String energySupplier = IO.readString();
-            this.state.addSmartHouse(tin,name,energySupplier);
+            this.state.addSmartHouse(tin, name, energySupplier);
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
@@ -154,7 +167,7 @@ public class IO implements IIO {
             Float fixedConsumption = IO.readFloat();
             IO.print("Enter the diameter: ");
             Float diameter = IO.readFloat();
-            this.state.addSmartBulb(division, proprietary, fixedConsumption, toneName,diameter);
+            this.state.addSmartBulb(division, proprietary, fixedConsumption, toneName, diameter);
             IO.printLine("Smart Device added with success");
         } catch (Exception e) {
             IO.showErrors("Error occurred");
@@ -177,7 +190,7 @@ public class IO implements IIO {
             int height = IO.readInt();
             IO.print("Enter the fileSize separeted with \".\": ");
             Float fileSize = IO.readFloat();
-            this.state.addSmartCamera(division, proprietary, fixedConsumption,width,height,fileSize);
+            this.state.addSmartCamera(division, proprietary, fixedConsumption, width, height, fileSize);
             IO.printLine("Smart Device added with success");
         } catch (Exception e) {
             IO.showErrors("Error occurred");
@@ -222,10 +235,10 @@ public class IO implements IIO {
 
     private Menu<IO> menuAddNewDevice() {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
-        list.add(new OptionCommand<>("SmartBulb", IO::addSmartBulb,true));
-        list.add(new OptionCommand<>("SmartCamera", IO::addSmartCamera,true));
-        list.add(new OptionCommand<>("SmartSpeaker", IO::addSmartSpeaker,true));
-        return new Menu<>("Add New SmartDevice",list,true);
+        list.add(new OptionCommand<>("SmartBulb", IO::addSmartBulb, true));
+        list.add(new OptionCommand<>("SmartCamera", IO::addSmartCamera, true));
+        list.add(new OptionCommand<>("SmartSpeaker", IO::addSmartSpeaker, true));
+        return new Menu<>("Add New SmartDevice", list, true);
     }
 
     private void addNewDevice() {
@@ -234,14 +247,14 @@ public class IO implements IIO {
 
     private Menu<IO> menuAddNewInformation() {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
-        list.add(new OptionCommand<>("Add new Proprietary and smart house", IO::addNewSmartHouse,false));
-        list.add(new OptionCommand<>("Add new Devices", IO::addNewDevice,false));
-        list.add(new OptionCommand<>("Add new Energy Supplier", IO::addEnergySupplier,false));
-        return new Menu<>("Add New Information",list, false);
+        list.add(new OptionCommand<>("Add new Proprietary and smart house", IO::addNewSmartHouse, false));
+        list.add(new OptionCommand<>("Add new Devices", IO::addNewDevice, false));
+        list.add(new OptionCommand<>("Add new Energy Supplier", IO::addEnergySupplier, false));
+        return new Menu<>("Add New Information", list, false);
     }
 
     /***  Turn off/on devices */
-    private void turnOnAllDevicesByTin(){
+    private void turnOnAllDevicesByTin() {
         try {
             String tin = readTinProprietary();
             this.state.turnOnAllDevicesByTin(tin);
@@ -251,7 +264,7 @@ public class IO implements IIO {
         }
     }
 
-    private void turnOffAllDevicesByTin(){
+    private void turnOffAllDevicesByTin() {
         try {
             String tin = readTinProprietary();
             this.state.turnOffAllDevicesByTin(tin);
@@ -261,12 +274,12 @@ public class IO implements IIO {
         }
     }
 
-    private void turnOffDeviceInDivision(){
+    private void turnOffDeviceInDivision() {
         try {
             if (tin.isEmpty() || division.isEmpty() || id < 0) {
                 getDevice();
             }
-            this.state.turnOffDeviceInDivision(tin.get(),division.get(),id);
+            this.state.turnOffDeviceInDivision(tin.get(), division.get(), id);
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
@@ -277,12 +290,12 @@ public class IO implements IIO {
         }
     }
 
-    private void turnOnDeviceInDivision(){
+    private void turnOnDeviceInDivision() {
         try {
             if (tin.isEmpty() || division.isEmpty() || id < 0) {
                 getDevice();
             }
-            this.state.turnOnDeviceInDivision(tin.get(),division.get(),id);
+            this.state.turnOnDeviceInDivision(tin.get(), division.get(), id);
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
@@ -295,21 +308,21 @@ public class IO implements IIO {
 
     private void runMenuTurnOnOffDevices() {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
-        list.add(new OptionCommand<>("Turn ON all devices by Proprietary", IO::turnOnAllDevicesByTin,true));
+        list.add(new OptionCommand<>("Turn ON all devices by Proprietary", IO::turnOnAllDevicesByTin, true));
         list.add(new OptionCommand<>("Turn ON one device", IO::turnOnDeviceInDivision));
-        list.add(new OptionCommand<>("Turn OFF all devices by Proprietary", IO::turnOffAllDevicesByTin,true));
+        list.add(new OptionCommand<>("Turn OFF all devices by Proprietary", IO::turnOffAllDevicesByTin, true));
         list.add(new OptionCommand<>("Turn OFF one device", IO::turnOffDeviceInDivision));
         Menu<IO> menu = new Menu<>("Turn ON/OFF smart devices", list);
         menu.runMenu(this);
     }
 
-    private void showTodaysDate(){
+    private void showTodaysDate() {
         LocalDate date = this.state.todaysDate();
         date.format(DateTimeFormatter.ISO_DATE);
         IO.printLine("Date :: " + date);
     }
 
-    private void skipDays(){
+    private void skipDays() {
         try {
             //FIXME change msg
             IO.printLine("How many days do you want to walk forward?");
@@ -322,7 +335,7 @@ public class IO implements IIO {
         }
     }
 
-    private void skipTODate(){
+    private void skipTODate() {
         try {
             LocalDate date = IO.readLocalDate();
             this.state.skipToDate(date);
@@ -363,7 +376,7 @@ public class IO implements IIO {
             IO.showErrors("The date you entered contains errors");
             return;
         }
-        var result = this.state.mostCostlyHouseBetween(startDate,endDate);
+        var result = this.state.mostCostlyHouseBetween(startDate, endDate);
         if (result.isEmpty()) {
             //FIXME change msg
             IO.printLine("There aren't enough information");
@@ -379,7 +392,7 @@ public class IO implements IIO {
         try {
             String energy = IO.readString();
             List<Invoice> invoices = this.state.invoicesByEnergySupplier(energy);
-            invoices.forEach(e-> IO.printLine(e.toString()));
+            invoices.forEach(e -> IO.printLine(e.toString()));
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
@@ -396,8 +409,8 @@ public class IO implements IIO {
             return;
         }
         try {
-            List<Pair<String, Double>> result = this.state.energySuppliersRankedByInvoiceVolumeBetween(startDate,endDate);
-            result.forEach(e-> IO.printLine(e.getFirst() + " :: " + e.getSecond()));
+            List<Pair<String, Double>> result = this.state.energySuppliersRankedByInvoiceVolumeBetween(startDate, endDate);
+            result.forEach(e -> IO.printLine(e.getFirst() + " :: " + e.getSecond()));
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
@@ -414,8 +427,8 @@ public class IO implements IIO {
             return;
         }
         try {
-            List<Pair<Proprietary, Double>> result = this.state.proprietariesRankedByEnergyConsumptionBetween(startDate,endDate);
-            result.forEach(e-> IO.printLine(e.getFirst().getName() + " :: " + e.getSecond()));
+            List<Pair<Proprietary, Double>> result = this.state.proprietariesRankedByEnergyConsumptionBetween(startDate, endDate);
+            result.forEach(e -> IO.printLine(e.getFirst().getName() + " :: " + e.getSecond()));
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
@@ -431,7 +444,7 @@ public class IO implements IIO {
                 IO::energySuppliersRankedByInvoiceVolumeBetween));
         list.add(new OptionCommand<>("Proprietaries ranked by energy consumption between two dates",
                 IO::proprietariesRankedByEnergyConsumptionBetween));
-        return new Menu<>("Statics",list);
+        return new Menu<>("Statics", list);
     }
 
 
@@ -443,9 +456,9 @@ public class IO implements IIO {
             HashMap<String, List<SmartDevice>> result = this.state.allDevicesByTin(tin);
             IO.printLine("");
             for (Map.Entry<String, List<SmartDevice>> division : result.entrySet()) {
-                IO.printLine("\n"+division.getKey());
+                IO.printLine("\n" + division.getKey());
                 int i = 1;
-                for( var device : division.getValue()) {
+                for (var device : division.getValue()) {
                     IO.printLine(i + " :: " + device.getSimpleName());
                     i++;
                 }
@@ -461,10 +474,10 @@ public class IO implements IIO {
         try {
             IO.print("Enter the division: ");
             String division = IO.readString();
-            var result = this.state.allDevicesByTinAndDivision(tin,division);
+            var result = this.state.allDevicesByTinAndDivision(tin, division);
             int i = 1;
             IO.printLine("");
-            for( var device : result) {
+            for (var device : result) {
                 IO.printLine(i + " :: " + device.getSimpleName());
                 i++;
             }
@@ -476,13 +489,13 @@ public class IO implements IIO {
 
     private void showAllProprietaries() {
         this.state.allProprietaries().forEach(proprietary ->
-            IO.printLine(proprietary.toString())
+                IO.printLine(proprietary.toString())
         );
     }
 
     private void showAllEnergyPlans() {
         IO.printLine("All energy plans\n");
-        for(String energyPlan : this.state.getAllEnergyPlans()) {
+        for (String energyPlan : this.state.getAllEnergyPlans()) {
             IO.printLine(energyPlan);
             IO.printLine("");
         }
@@ -490,7 +503,7 @@ public class IO implements IIO {
 
     private void showAllEnergySuplliersName() {
         IO.printLine("All  Energy Suplliers Name\n");
-        for(String energy : this.state.allEnergySuppliersName()) {
+        for (String energy : this.state.allEnergySuppliersName()) {
             IO.printLine(energy);
         }
     }
@@ -503,7 +516,7 @@ public class IO implements IIO {
         list.add(new OptionCommand<>("Show all energy plans", IO::showAllEnergyPlans));
         list.add(new OptionCommand<>("Show all energy suplliers name", IO::showAllEnergySuplliersName));
         list.add(new OptionCommand<>("Show Date", IO::showTodaysDate));
-        return new Menu<>("Show information",list);
+        return new Menu<>("Show information", list);
     }
 
     //Control
@@ -516,7 +529,7 @@ public class IO implements IIO {
             String energySupplier = IO.readString();
             IO.print("Energy Plan name");
             String energyPlan = IO.readString();
-            this.state.changeEnergyPlan(energySupplier,energyPlan);
+            this.state.changeEnergyPlan(energySupplier, energyPlan);
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
@@ -530,7 +543,7 @@ public class IO implements IIO {
             String energySupplier = IO.readString();
             IO.print("Discount");
             int discount = IO.readInt();
-            this.state.changeEnergySupplierDiscount(energySupplier,discount);
+            this.state.changeEnergySupplierDiscount(energySupplier, discount);
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
@@ -547,7 +560,7 @@ public class IO implements IIO {
             }
             IO.print("Tone: ");
             String tone = IO.readString();
-            this.state.smartBulbChangeTone(tin.get(),division.get(),id,tone);
+            this.state.smartBulbChangeTone(tin.get(), division.get(), id, tone);
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
@@ -559,7 +572,7 @@ public class IO implements IIO {
         list.add(new OptionCommand<>("Change Tone", IO::smartBulbChangeTone));
         list.add(new OptionCommand<>("Turn OFF", IO::turnOffDeviceInDivision));
         list.add(new OptionCommand<>("Turn On", IO::turnOnDeviceInDivision));
-        var menu = new Menu<>("Control SmartSpeaker",list);
+        var menu = new Menu<>("Control SmartSpeaker", list);
         menu.runMenu(this);
     }
 
@@ -567,7 +580,7 @@ public class IO implements IIO {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
         list.add(new OptionCommand<>("Turn OFF", IO::turnOffDeviceInDivision));
         list.add(new OptionCommand<>("Turn On", IO::turnOnDeviceInDivision));
-        var menu = new Menu<>("Control SmartCamera",list);
+        var menu = new Menu<>("Control SmartCamera", list);
         menu.runMenu(this);
     }
 
@@ -577,19 +590,20 @@ public class IO implements IIO {
                 IO.printLine("");
                 IO.printLine(getDevice().toString());
             }
-            this.state.smartSpeakerVolumeUp(tin.get(),division.get(),id);
+            this.state.smartSpeakerVolumeUp(tin.get(), division.get(), id);
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
         }
     }
+
     private void smartSpeakerVolumeDown() {
         try {
             if (tin.isEmpty() || division.isEmpty() || id < 0) {
                 IO.printLine("");
                 IO.printLine(getDevice().toString());
             }
-            this.state.smartSpeakerVolumeDown(tin.get(),division.get(),id);
+            this.state.smartSpeakerVolumeDown(tin.get(), division.get(), id);
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);
@@ -602,7 +616,7 @@ public class IO implements IIO {
         list.add(new OptionCommand<>("Volume Up", IO::smartSpeakerVolumeUp));
         list.add(new OptionCommand<>("Turn OFF", IO::turnOffDeviceInDivision));
         list.add(new OptionCommand<>("Turn On", IO::turnOnDeviceInDivision));
-        var menu = new Menu<>("Control SmartSpeaker",list);
+        var menu = new Menu<>("Control SmartSpeaker", list);
         menu.runMenu(this);
     }
 
@@ -610,18 +624,19 @@ public class IO implements IIO {
         tin = Optional.of(readTinProprietary());
         IO.print("Enter the division: ");
         division = Optional.of(IO.readString());
-        List<SmartDevice> result = this.state.allDevicesByTinAndDivision(tin.get(),division.get());
+        List<SmartDevice> result = this.state.allDevicesByTinAndDivision(tin.get(), division.get());
         int i = 1;
         IO.printLine("");
-        for( var device : result) {
+        for (var device : result) {
             IO.printLine(i + " :: " + device.getSimpleName());
             i++;
         }
 
         IO.printLine("Which device do you want?");
         IO.print("Id: ");
-        id = IO.readInt(); id--;
-        if(id > result.size() || id < 0) {
+        id = IO.readInt();
+        id--;
+        if (id > result.size() || id < 0) {
             throw new IndexOutOfBoundsException();
         }
         return result.get(id);
@@ -656,7 +671,7 @@ public class IO implements IIO {
         list.add(new OptionCommand<>("Change energy plan", IO::changeEnergyPlan));
         list.add(new OptionCommand<>("Change Energy supllier discount", IO::changeEnergySupllierDiscount));
         list.add(new OptionCommand<>("Control devices", IO::controlDevices));
-        return new Menu<>("Control the Houses",list);
+        return new Menu<>("Control the Houses", list);
     }
 
     private MenuCatalog<IO> menuCatalog() {

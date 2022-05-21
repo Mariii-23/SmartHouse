@@ -55,5 +55,6 @@ public class Colors {
     public static final String ANSI_BOLD = "\u001B[1m";
     public static final String ANSI_ITALIC = "\033[3m";
 
-    public Colors() {}
+    public Colors() {
+    }
 }

@@ -1,6 +1,8 @@
 package controller;
 
+import controller.parse.ParseEvents;
 import controller.parse.Parser;
+import controller.parse.exceptions.ParseEventException;
 import model.*;
 import model.energy_suppliers.Invoice;
 import model.smart_house.DeviceDoesNotExistException;
@@ -37,7 +39,7 @@ public class State implements IState {
         this.smartHousesManager.skipDays(numDays);
     }
 
-    public  void skipToDate(LocalDate newDate) {
+    public void skipToDate(LocalDate newDate) {
         this.smartHousesManager.skipToDate(newDate);
     }
 
@@ -47,6 +49,10 @@ public class State implements IState {
 
     public void readFromFile(final String filepath) throws IOException {
         this.smartHousesManager = Parser.parse(filepath);
+    }
+
+    public void readEventsFromFile(final String filepath) throws IOException, EnergySupplierDoesNotExistException, DeviceDoesNotExistException, ProprietaryDoesNotExistException, DivisionDoesNotExistException, ParseEventException, WrongTypeOfDeviceException, ClassNotFoundException, EnergySupplierAlreadyExistsException {
+        ParseEvents.fromFile(this.smartHousesManager, filepath);
     }
 
     public void saveObjectFile(final String filepath) throws IOException {
@@ -62,12 +68,12 @@ public class State implements IState {
     }
 
     public HashMap<String, List<SmartDevice>> allDevicesByTin(String tin)
-        throws ProprietaryDoesNotExistException {
+            throws ProprietaryDoesNotExistException {
         return this.smartHousesManager.allDevicesByTin(tin);
     }
 
     public List<SmartDevice> allDevicesByTinAndDivision(String tin, String division)
-        throws ProprietaryDoesNotExistException, DivisionDoesNotExistException {
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException {
         return this.smartHousesManager.allDevicesByTinAndDivision(tin, division);
     }
 
@@ -82,16 +88,16 @@ public class State implements IState {
 
     public void changeEnergySupplierDiscount(String energySupplierName, int discount)
             throws EnergySupplierDoesNotExistException {
-        this.smartHousesManager.changeEnergySupplierDiscount(energySupplierName,discount);
+        this.smartHousesManager.changeEnergySupplierDiscount(energySupplierName, discount);
     }
 
-    public void addSmartHouse( String tin, String proprietaryName, String energySupplier)
+    public void addSmartHouse(String tin, String proprietaryName, String energySupplier)
             throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException {
         if (this.smartHousesManager.containsProprietary(tin))
             throw new ProprietaryAlreadyExistException(
-                "Proprietary with tin " + tin + " already exists"
+                    "Proprietary with tin " + tin + " already exists"
             );
-        Proprietary proprietary = new Proprietary(proprietaryName,tin);
+        Proprietary proprietary = new Proprietary(proprietaryName, tin);
         SmartHouse smartHouse = new SmartHouse(proprietary, energySupplier);
         this.smartHousesManager.addSmartHouse(smartHouse);
     }
@@ -104,14 +110,14 @@ public class State implements IState {
     }
 
     public void addSmartCamera(final String division, String proprietary, final float fixedConsumption,
-                                final int width, final int height, final float fileSize)
+                               final int width, final int height, final float fileSize)
             throws ProprietaryDoesNotExistException {
-        SmartDevice device = new SmartCamera(fixedConsumption,width,height,fileSize);
+        SmartDevice device = new SmartCamera(fixedConsumption, width, height, fileSize);
         this.smartHousesManager.addSmartDeviceToHouse(proprietary, division, device);
     }
 
-    public void addSmartBulb( String division, String proprietary, float fixedConsumption,
-            String toneName, float diameter) throws ProprietaryDoesNotExistException, NoSuchToneException {
+    public void addSmartBulb(String division, String proprietary, float fixedConsumption,
+                             String toneName, float diameter) throws ProprietaryDoesNotExistException, NoSuchToneException {
         Tone tone;
         try {
             tone = Tone.valueOf(toneName.toUpperCase());
@@ -136,19 +142,19 @@ public class State implements IState {
         } catch (Exception e) {
             throw new NoSuchToneException("No shuch tone : " + toneName.toUpperCase());
         }
-        this.smartHousesManager.smartBulbChangeTone(tin,division,id,tone);
+        this.smartHousesManager.smartBulbChangeTone(tin, division, id, tone);
     }
 
     public void smartSpeakerVolumeDown(String tin, String division, int id)
             throws DeviceDoesNotExistException, DivisionDoesNotExistException,
             ProprietaryDoesNotExistException, WrongTypeOfDeviceException {
-        this.smartHousesManager.smartSpeakerVolumeDown(tin,division,id);
+        this.smartHousesManager.smartSpeakerVolumeDown(tin, division, id);
     }
 
     public void smartSpeakerVolumeUp(String tin, String division, int id)
             throws DeviceDoesNotExistException, DivisionDoesNotExistException,
             ProprietaryDoesNotExistException, WrongTypeOfDeviceException {
-        this.smartHousesManager.smartSpeakerVolumeUp(tin,division,id);
+        this.smartHousesManager.smartSpeakerVolumeUp(tin, division, id);
     }
 
     public void turnOffAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException {
@@ -160,12 +166,12 @@ public class State implements IState {
     }
 
     public void turnOffDeviceInDivision(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
         this.smartHousesManager.turnOffDeviceInDivision(tin, division, id);
     }
 
     public void turnOnDeviceInDivision(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
         this.smartHousesManager.turnOnDeviceInDivision(tin, division, id);
     }
 
@@ -185,7 +191,7 @@ public class State implements IState {
         return this.smartHousesManager.energySuppliersRankedByInvoiceVolumeBetween(startDate, endDate);
     }
 
-    public List<Pair<Proprietary, Double>> proprietariesRankedByEnergyConsumptionBetween(LocalDate startDate, LocalDate endDate){
+    public List<Pair<Proprietary, Double>> proprietariesRankedByEnergyConsumptionBetween(LocalDate startDate, LocalDate endDate) {
         return this.smartHousesManager.proprietariesRankedByEnergyConsumptionBetween(startDate, endDate);
     }
 }

@@ -62,7 +62,7 @@ public class Menu<T> {
     }
 
     public Boolean isValid() {
-        return this.option - 1  >= 0 && this.option - 1 < this.options.size();
+        return this.option - 1 >= 0 && this.option - 1 < this.options.size();
     }
 
     public Consumer<T> getFunction() {

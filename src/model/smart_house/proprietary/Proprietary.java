@@ -33,9 +33,9 @@ public class Proprietary implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[")
-          .append(tin)
-          .append("]  ")
-          .append(name);
+                .append(tin)
+                .append("]  ")
+                .append(name);
         return sb.toString();
     }
 }

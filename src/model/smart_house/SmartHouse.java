@@ -34,9 +34,9 @@ public class SmartHouse implements Serializable {
 
     public Map<String, Division> getDivisionsByName() {
         return divisionsByName
-            .values()
-            .stream()
-            .collect(Collectors.toMap(Division::getName, Division::clone));
+                .values()
+                .stream()
+                .collect(Collectors.toMap(Division::getName, Division::clone));
     }
 
     public String getProprietaryTin() {
@@ -58,18 +58,18 @@ public class SmartHouse implements Serializable {
 
     public float getEnergyConsumption() {
         return (float) divisionsByName
-            .values()
-            .stream()
-            .mapToDouble(Division::getEnergyConsumption)
-            .sum();
+                .values()
+                .stream()
+                .mapToDouble(Division::getEnergyConsumption)
+                .sum();
     }
 
     public int getNumDevices() {
         return divisionsByName
-            .values()
-            .stream()
-            .mapToInt(Division::getNumDevices)
-            .sum();
+                .values()
+                .stream()
+                .mapToInt(Division::getNumDevices)
+                .sum();
     }
 
     public String getEnergySupplierName() {
@@ -85,7 +85,7 @@ public class SmartHouse implements Serializable {
     }
 
     public void turnOnDeviceInDivision(String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException {
         Division div = this.divisionsByName.get(division);
         if (div == null)
             throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
@@ -93,7 +93,7 @@ public class SmartHouse implements Serializable {
     }
 
     public void turnOffDeviceInDivision(String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException {
         Division div = this.divisionsByName.get(division);
         if (div == null)
             throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
@@ -101,7 +101,7 @@ public class SmartHouse implements Serializable {
     }
 
     public void smartBulbChangeTone(String division, int id, Tone tone)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException, WrongTypeOfDeviceException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException, WrongTypeOfDeviceException {
         Division div = this.divisionsByName.get(division);
         if (div == null)
             throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
@@ -109,7 +109,7 @@ public class SmartHouse implements Serializable {
     }
 
     public void smartSpeakerVolumeUp(String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException, WrongTypeOfDeviceException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException, WrongTypeOfDeviceException {
         Division div = this.divisionsByName.get(division);
         if (div == null)
             throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
@@ -117,7 +117,7 @@ public class SmartHouse implements Serializable {
     }
 
     public void smartSpeakerVolumeDown(String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException, WrongTypeOfDeviceException {
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException, WrongTypeOfDeviceException {
         Division div = this.divisionsByName.get(division);
         if (div == null)
             throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
@@ -132,7 +132,7 @@ public class SmartHouse implements Serializable {
 
     public List<SmartDevice> getAllDevicesByDivision(String divisionName) throws DivisionDoesNotExistException {
         Division division = this.divisionsByName.get(divisionName);
-        if(division == null)
+        if (division == null)
             throw new DivisionDoesNotExistException("Division does not exist : " + divisionName);
         return division.getAllDevices();
     }

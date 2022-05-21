@@ -1,5 +1,6 @@
 package controller;
 
+import controller.parse.exceptions.ParseEventException;
 import model.DivisionDoesNotExistException;
 import model.EnergySupplierDoesNotExistException;
 import model.ProprietaryAlreadyExistException;
@@ -24,30 +25,37 @@ public interface IState {
 
     void readFromFile(final String filepath) throws IOException;
 
+    void readEventsFromFile(final String filepath) throws IOException,
+            EnergySupplierDoesNotExistException, DeviceDoesNotExistException,
+            ProprietaryDoesNotExistException, DivisionDoesNotExistException,
+            ParseEventException, WrongTypeOfDeviceException,
+            ClassNotFoundException, EnergySupplierAlreadyExistsException;
+
     void saveObjectFile(final String filepath) throws IOException;
 
     HashMap<String, List<SmartDevice>> allDevicesByTin(String tin)
-        throws ProprietaryDoesNotExistException;
+            throws ProprietaryDoesNotExistException;
 
     List<SmartDevice> allDevicesByTinAndDivision(String tin, String division)
-        throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
 
     List<Proprietary> allProprietaries();
+
     List<String> allEnergySuppliersName();
 
     void addSmartHouse(String tin, String proprietaryName, String energySupplier)
-        throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException;
+            throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException;
 
     void addSmartSpeaker(final String division, String proprietary, final float fixedConsumption,
                          final int volume, final String channel, final String brand)
-        throws ProprietaryDoesNotExistException;
+            throws ProprietaryDoesNotExistException;
 
     void addSmartCamera(final String division, String proprietary, final float fixedConsumption,
                         final int width, final int height, final float fileSize)
-        throws ProprietaryDoesNotExistException;
+            throws ProprietaryDoesNotExistException;
 
     void addSmartBulb(String division, String proprietary, float fixedConsumption,
-                              String toneName, float diameter)
+                      String toneName, float diameter)
             throws ProprietaryDoesNotExistException, NoSuchToneException;
 
     void addEnergySupplier(String energySupplierName) throws EnergySupplierAlreadyExistsException;
@@ -66,27 +74,37 @@ public interface IState {
             ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
 
 
-
     String[] getAllEnergyPlans();
+
     void changeEnergyPlan(String energySupplierName, String energyPlanName)
             throws EnergySupplierDoesNotExistException, ClassNotFoundException;
+
     void changeEnergySupplierDiscount(String energySupplierName, int discount)
             throws EnergySupplierDoesNotExistException;
 
     LocalDate todaysDate();
+
     void skipDays(int numdays);
+
     void skipToDate(LocalDate newDate);
 
     void turnOffAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
+
     void turnOnAllDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
+
     void turnOffDeviceInDivision(String tin, String division, int id)
-        throws DivisionDoesNotExistException, ProprietaryDoesNotExistException, DeviceDoesNotExistException;
+            throws DivisionDoesNotExistException, ProprietaryDoesNotExistException, DeviceDoesNotExistException;
+
     void turnOnDeviceInDivision(String tin, String division, int id)
-        throws DivisionDoesNotExistException, ProprietaryDoesNotExistException, DeviceDoesNotExistException;
+            throws DivisionDoesNotExistException, ProprietaryDoesNotExistException, DeviceDoesNotExistException;
 
     Optional<Pair<String, Double>> highestProfitSupplier();
+
     Optional<Pair<String, Double>> mostCostlyHouseBetween(LocalDate startDate, LocalDate endDate);
+
     List<Invoice> invoicesByEnergySupplier(String energySupplierName) throws EnergySupplierDoesNotExistException;
+
     List<Pair<String, Double>> energySuppliersRankedByInvoiceVolumeBetween(LocalDate startDate, LocalDate endDate);
+
     List<Pair<Proprietary, Double>> proprietariesRankedByEnergyConsumptionBetween(LocalDate startDate, LocalDate endDate);
 }

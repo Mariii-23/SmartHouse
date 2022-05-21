@@ -5,8 +5,8 @@ import model.smart_house.smart_devices.SmartDevice;
 import java.io.Serializable;
 
 public class SmartBulb extends SmartDevice implements Serializable {
-    private Tone tone;
     private final float diameter;
+    private Tone tone;
 
     public SmartBulb(float fixedConsumption, boolean on, Tone tone, float diameter) {
         super(fixedConsumption, on);
@@ -30,12 +30,12 @@ public class SmartBulb extends SmartDevice implements Serializable {
         return tone;
     }
 
-    public float getDiameter() {
-        return diameter;
-    }
-
     public void setTone(Tone tone) {
         this.tone = tone;
+    }
+
+    public float getDiameter() {
+        return diameter;
     }
 
     @Override

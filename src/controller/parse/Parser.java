@@ -88,19 +88,19 @@ public class Parser {
                 case "SmartBulb" -> {
                     String[] bulbInfo = splitLine[1].split(",", 3);
                     SmartBulb bulb = new SmartBulb(
-                        Float.parseFloat(bulbInfo[2]),
-                        Tone.valueOf(bulbInfo[0].toUpperCase()),
-                        Float.parseFloat(bulbInfo[1])
+                            Float.parseFloat(bulbInfo[2]),
+                            Tone.valueOf(bulbInfo[0].toUpperCase()),
+                            Float.parseFloat(bulbInfo[1])
                     );
                     division.addSmartDevice(bulb);
                 }
                 case "SmartSpeaker" -> {
                     String[] speakerInfo = splitLine[1].split(",", 4);
                     SmartSpeaker speaker = new SmartSpeaker(
-                        Float.parseFloat(speakerInfo[3]),
-                        Integer.parseInt(speakerInfo[0]),
-                        speakerInfo[1],
-                        speakerInfo[2]
+                            Float.parseFloat(speakerInfo[3]),
+                            Integer.parseInt(speakerInfo[0]),
+                            speakerInfo[1],
+                            speakerInfo[2]
                     );
                     division.addSmartDevice(speaker);
                 }
@@ -110,10 +110,10 @@ public class Parser {
                     Matcher resMatcher = resPattern.matcher(cameraInfo[0]);
                     resMatcher.find();
                     SmartCamera camera = new SmartCamera(
-                        Float.parseFloat(cameraInfo[2]),
-                        Integer.parseInt(resMatcher.group("width")),
-                        Integer.parseInt(resMatcher.group("height")),
-                        Float.parseFloat(cameraInfo[1])
+                            Float.parseFloat(cameraInfo[2]),
+                            Integer.parseInt(resMatcher.group("width")),
+                            Integer.parseInt(resMatcher.group("height")),
+                            Float.parseFloat(cameraInfo[1])
                     );
                     division.addSmartDevice(camera);
                 }

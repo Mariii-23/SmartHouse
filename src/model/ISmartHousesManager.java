@@ -27,10 +27,10 @@ public interface ISmartHousesManager {
     String[] getAllEnergyPlans();
 
     void changeEnergyPlan(String energySupplierName, String energyPlanName)
-        throws EnergySupplierDoesNotExistException, ClassNotFoundException;
+            throws EnergySupplierDoesNotExistException, ClassNotFoundException;
 
     void changeEnergySupplierDiscount(String energySupplierName, int discount)
-        throws EnergySupplierDoesNotExistException;
+            throws EnergySupplierDoesNotExistException;
 
     // smart house
     void addSmartHouse(SmartHouse smartHouse) throws EnergySupplierDoesNotExistException;
@@ -44,23 +44,23 @@ public interface ISmartHousesManager {
     void turnOnAllHouseDevices(String tin) throws ProprietaryDoesNotExistException;
 
     void turnOffDeviceInDivision(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
 
     void turnOnDeviceInDivision(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
 
     // control devices
     void smartBulbChangeTone(String tin, String division, int id, Tone tone)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-        ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
 
     void smartSpeakerVolumeDown(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-        ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
 
     void smartSpeakerVolumeUp(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-        ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
 
 
     LocalDate getDate();
@@ -85,9 +85,10 @@ public interface ISmartHousesManager {
     HashMap<String, List<SmartDevice>> allDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
 
     List<SmartDevice> allDevicesByTinAndDivision(String tin, String division)
-        throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
 
     List<Proprietary> allProprietaries();
+
     List<String> allEnergySuppliersName();
 
     void saveObjectFile(String filename) throws IOException;
