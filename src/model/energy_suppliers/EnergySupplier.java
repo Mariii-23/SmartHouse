@@ -1,6 +1,5 @@
 package model.energy_suppliers;
 
-import model.energy_suppliers.energy_plans.BasePlan;
 import model.energy_suppliers.energy_plans.EnergyPlan;
 import utils.Pair;
 
@@ -12,11 +11,13 @@ import java.util.stream.Collectors;
 public class EnergySupplier implements Serializable {
     private final String name;
     private EnergyPlan energyPlan;
+    private int discount;
     private final HashMap<String, List<Invoice>> invoicesByProprietaryTin;
 
     public EnergySupplier(String name) {
         this.name = name;
-        this.energyPlan = new BasePlan();
+        this.energyPlan = EnergyPlan.randomEnergyPlan();
+        this.discount = 0;
         this.invoicesByProprietaryTin = new HashMap<>();
     }
 
@@ -24,8 +25,16 @@ public class EnergySupplier implements Serializable {
         return this.name;
     }
 
+    public void setEnergyPlan(String energyPlanName) throws ClassNotFoundException {
+        this.energyPlan = EnergyPlan.getEnergyPlanFromName(energyPlanName);
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = Math.max(0, Math.min(100, discount));
+    }
+
     public float energyCost(int numDevices, float devicesConsumption) {
-        return this.energyPlan.energyCost(numDevices, devicesConsumption);
+        return this.energyPlan.energyCost(numDevices, devicesConsumption) * this.discount / 100.f;
     }
 
     public void addInvoice(Invoice invoice, String proprietaryTin) {

@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class SmartBulb extends SmartDevice implements Serializable {
     private Tone tone;
-    private float diameter;
+    private final float diameter;
 
     public SmartBulb(float fixedConsumption, boolean on, Tone tone, float diameter) {
         super(fixedConsumption, on);

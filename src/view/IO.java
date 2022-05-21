@@ -392,7 +392,7 @@ public class IO implements IIO {
     }
 
     private void showAllProprietaries() {
-        this.state.allProprietarys().forEach(proprietary ->
+        this.state.allProprietaries().forEach(proprietary ->
             IO.printLine(proprietary.toString())
         );
     }

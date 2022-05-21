@@ -1,10 +1,11 @@
-package model.parse;
+package controller.parse;
 
 import model.EnergySupplierDoesNotExistException;
+import model.ISmartHousesManager;
 import model.SmartHousesManager;
-import model.proprietary.Proprietary;
 import model.smart_house.Division;
 import model.smart_house.SmartHouse;
+import model.smart_house.proprietary.Proprietary;
 import model.smart_house.smart_devices.bulb.SmartBulb;
 import model.smart_house.smart_devices.bulb.Tone;
 import model.smart_house.smart_devices.camera.SmartCamera;
@@ -20,11 +21,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    public static SmartHousesManager parse(String path) throws IOException {
+    public static ISmartHousesManager parse(String path) throws IOException {
         List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
         Iterator<String> it = lines.iterator();
 
-        SmartHousesManager smartHousesManager = new SmartHousesManager();
+        ISmartHousesManager smartHousesManager = new SmartHousesManager();
 
         String nextLine = it.hasNext() ? it.next() : null;
         while (nextLine != null) {

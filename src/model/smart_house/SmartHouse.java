@@ -1,14 +1,14 @@
 package model.smart_house;
 
 import model.DivisionDoesNotExistException;
-import model.proprietary.Proprietary;
+import model.smart_house.proprietary.Proprietary;
 import model.smart_house.smart_devices.SmartDevice;
+import model.smart_house.smart_devices.bulb.Tone;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class SmartHouse implements Serializable {
@@ -25,6 +25,7 @@ public class SmartHouse implements Serializable {
     public SmartHouse(SmartHouse that) {
         this.proprietary = that.getProprietary();
         this.divisionsByName = that.getDivisionsByName();
+        this.energySupplier = that.energySupplier;
     }
 
     public Proprietary getProprietary() {
@@ -35,8 +36,7 @@ public class SmartHouse implements Serializable {
         return divisionsByName
             .values()
             .stream()
-            .map(Division::clone)
-            .collect(Collectors.toMap(Division::getName, Function.identity()));
+            .collect(Collectors.toMap(Division::getName, Division::clone));
     }
 
     public String getProprietaryTin() {
@@ -53,7 +53,7 @@ public class SmartHouse implements Serializable {
     }
 
     public void addDivision(Division division) {
-        divisionsByName.put(division.getName(), division);
+        divisionsByName.put(division.getName(), division.clone());
     }
 
     public float getEnergyConsumption() {
@@ -86,18 +86,42 @@ public class SmartHouse implements Serializable {
 
     public void turnOnDeviceInDivision(String division, int id)
         throws DeviceDoesNotExistException, DivisionDoesNotExistException {
-        Division elem = this.divisionsByName.get(division);
-        if (elem == null)
+        Division div = this.divisionsByName.get(division);
+        if (div == null)
             throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
-        elem.switchDeviceOn(id);
+        div.switchDeviceOn(id);
     }
 
     public void turnOffDeviceInDivision(String division, int id)
         throws DeviceDoesNotExistException, DivisionDoesNotExistException {
-        Division elem = this.divisionsByName.get(division);
-        if (elem == null)
+        Division div = this.divisionsByName.get(division);
+        if (div == null)
             throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
-        elem.switchDeviceOff(id);
+        div.switchDeviceOff(id);
+    }
+
+    public void smartBulbChangeTone(String division, int id, Tone tone)
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException, WrongTypeOfDeviceException {
+        Division div = this.divisionsByName.get(division);
+        if (div == null)
+            throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
+        div.smartBulbChangeTone(id, tone);
+    }
+
+    public void smartSpeakerVolumeUp(String division, int id)
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException, WrongTypeOfDeviceException {
+        Division div = this.divisionsByName.get(division);
+        if (div == null)
+            throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
+        div.smartSpeakerVolumeUp(id);
+    }
+
+    public void smartSpeakerVolumeDown(String division, int id)
+        throws DeviceDoesNotExistException, DivisionDoesNotExistException, WrongTypeOfDeviceException {
+        Division div = this.divisionsByName.get(division);
+        if (div == null)
+            throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
+        div.smartSpeakerVolumeDown(id);
     }
 
     public HashMap<String, List<String>> getAllDevices() {

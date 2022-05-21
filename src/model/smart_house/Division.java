@@ -1,6 +1,9 @@
 package model.smart_house;
 
 import model.smart_house.smart_devices.SmartDevice;
+import model.smart_house.smart_devices.bulb.SmartBulb;
+import model.smart_house.smart_devices.bulb.Tone;
+import model.smart_house.smart_devices.speaker.SmartSpeaker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ public class Division implements Serializable {
     }
 
     public void addSmartDevice(SmartDevice smartDevice) {
-        smartDevices.add(smartDevice);
+        smartDevices.add(smartDevice.clone());
     }
 
     public void switchDeviceOn(int id) throws DeviceDoesNotExistException {
@@ -47,6 +50,48 @@ public class Division implements Serializable {
     public void switchDeviceOff(int id) throws DeviceDoesNotExistException {
         try {
             smartDevices.get(id).switchOff();
+        } catch (IndexOutOfBoundsException _e) {
+            throw new DeviceDoesNotExistException("Device with id: " + id + " does not exist");
+        }
+    }
+
+    public void smartBulbChangeTone(int id, Tone tone)
+        throws DeviceDoesNotExistException, WrongTypeOfDeviceException {
+        try {
+            SmartDevice d = smartDevices.get(id);
+            if (d instanceof SmartBulb) {
+                ((SmartBulb) d).setTone(tone);
+            } else {
+                throw new WrongTypeOfDeviceException("Device is not a Smart Bulb");
+            }
+        } catch (IndexOutOfBoundsException _e) {
+            throw new DeviceDoesNotExistException("Device with id: " + id + " does not exist");
+        }
+    }
+
+    public void smartSpeakerVolumeDown(int id)
+        throws DeviceDoesNotExistException, WrongTypeOfDeviceException {
+        try {
+            SmartDevice d = smartDevices.get(id);
+            if (d instanceof SmartSpeaker) {
+                ((SmartSpeaker) d).volumeDown();
+            } else {
+                throw new WrongTypeOfDeviceException("Device is not a Smart Speaker");
+            }
+        } catch (IndexOutOfBoundsException _e) {
+            throw new DeviceDoesNotExistException("Device with id: " + id + " does not exist");
+        }
+    }
+
+    public void smartSpeakerVolumeUp(int id)
+        throws DeviceDoesNotExistException, WrongTypeOfDeviceException {
+        try {
+            SmartDevice d = smartDevices.get(id);
+            if (d instanceof SmartSpeaker) {
+                ((SmartSpeaker) d).volumeUp();
+            } else {
+                throw new WrongTypeOfDeviceException("Device is not a Smart Speaker");
+            }
         } catch (IndexOutOfBoundsException _e) {
             throw new DeviceDoesNotExistException("Device with id: " + id + " does not exist");
         }

@@ -1,4 +1,4 @@
-package model.proprietary;
+package model.smart_house.proprietary;
 
 import java.io.Serializable;
 
