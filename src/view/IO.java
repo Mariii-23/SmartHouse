@@ -275,6 +275,30 @@ public class IO implements IIO {
         }
     }
 
+    private void turnOffAllDevicesInDivision() {
+        try {
+            String tin = readTinProprietary();
+            IO.print("Enter the division: ");
+            String division = IO.readString();
+            this.state.turnOffAllHouseDevicesDivision(tin, division);
+        } catch (Exception e) {
+            IO.showErrors("Error occurred");
+            IO.showErrors(e);
+        }
+    }
+
+    private void turnOnAllDevicesInDivision() {
+        try {
+            String tin = readTinProprietary();
+            IO.print("Enter the division: ");
+            String division = IO.readString();
+            this.state.turnOnAllHouseDevicesDivision(tin, division);
+        } catch (Exception e) {
+            IO.showErrors("Error occurred");
+            IO.showErrors(e);
+        }
+    }
+
     private void turnOffDeviceInDivision() {
         try {
             if (tin.isEmpty() || division.isEmpty() || id < 0) {
@@ -310,8 +334,10 @@ public class IO implements IIO {
     private void runMenuTurnOnOffDevices() {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
         list.add(new OptionCommand<>("Turn on all proprietary's devices", IO::turnOnAllDevicesByTin, true));
+        list.add(new OptionCommand<>("Turn on all proprietary's devices in a division", IO::turnOnAllDevicesInDivision, true));
         list.add(new OptionCommand<>("Turn on one device", IO::turnOnDeviceInDivision));
         list.add(new OptionCommand<>("Turn off all proprietary's devices", IO::turnOffAllDevicesByTin, true));
+        list.add(new OptionCommand<>("Turn off all proprietary's devices in a division", IO::turnOffAllDevicesInDivision, true));
         list.add(new OptionCommand<>("Turn off one device", IO::turnOffDeviceInDivision));
         Menu<IO> menu = new Menu<>("Turn on/off smart devices", list);
         menu.runMenu(this);
@@ -508,7 +534,7 @@ public class IO implements IIO {
 
     private void showDevice() {
         try {
-            printLine( "\n" + getDevice().toString());
+            printLine("\n" + getDevice().toString());
         } catch (Exception e) {
             IO.showErrors("Error occurred");
             IO.showErrors(e);

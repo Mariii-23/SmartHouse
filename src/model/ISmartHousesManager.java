@@ -38,7 +38,7 @@ public interface ISmartHousesManager {
      * @throws ClassNotFoundException              if the energy plan name does not correspond to a valid energy plan
      */
     void changeEnergyPlan(String energySupplierName, String energyPlanName)
-        throws EnergySupplierDoesNotExistException, ClassNotFoundException;
+            throws EnergySupplierDoesNotExistException, ClassNotFoundException;
 
     /**
      * @param energySupplierName name of the energy supplier to change the discount
@@ -46,7 +46,7 @@ public interface ISmartHousesManager {
      * @throws EnergySupplierDoesNotExistException if the name does not correspond to an already existing energy supplier
      */
     void changeEnergySupplierDiscount(String energySupplierName, int discount)
-        throws EnergySupplierDoesNotExistException;
+            throws EnergySupplierDoesNotExistException;
 
     // smart house
 
@@ -56,7 +56,7 @@ public interface ISmartHousesManager {
      * @throws ProprietaryAlreadyExistException    if the proprietary already has a smart house in the system
      */
     void addSmartHouse(SmartHouse smartHouse)
-        throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException;
+            throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException;
 
     /**
      * @param name           name of the proprietary of the new smart house
@@ -66,7 +66,7 @@ public interface ISmartHousesManager {
      * @throws ProprietaryAlreadyExistException    if the proprietary already has a smart house in the system
      */
     void addSmartHouse(String name, String tin, String energySupplier)
-        throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException;
+            throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException;
 
     /**
      * @param tin         TIN of the proprietary of the smart house
@@ -91,13 +91,31 @@ public interface ISmartHousesManager {
     /**
      * @param tin      TIN of the proprietary of the smart house
      * @param division division where the device is located
+     * @throws DivisionDoesNotExistException    if the division does not exist within the house
+     * @throws ProprietaryDoesNotExistException if the proprietary does not have a house in the system
+     */
+    void turnOnAllHouseDevicesDivision(String tin, String division)
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
+
+    /**
+     * @param tin      TIN of the proprietary of the smart house
+     * @param division division where the device is located
+     * @throws DivisionDoesNotExistException    if the division does not exist within the house
+     * @throws ProprietaryDoesNotExistException if the proprietary does not have a house in the system
+     */
+    void turnOffAllHouseDevicesDivision(String tin, String division)
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
+
+    /**
+     * @param tin      TIN of the proprietary of the smart house
+     * @param division division where the device is located
      * @param id       id of the device within the division
      * @throws DeviceDoesNotExistException      if the device does not exist in the division
      * @throws DivisionDoesNotExistException    if the division does not exist within the house
      * @throws ProprietaryDoesNotExistException if the proprietary does not have a house in the system
      */
     void turnOffDeviceInDivision(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
 
     /**
      * @param tin      TIN of the proprietary of the smart house
@@ -108,7 +126,7 @@ public interface ISmartHousesManager {
      * @throws ProprietaryDoesNotExistException if the proprietary does not have a house in the system
      */
     void turnOnDeviceInDivision(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException;
 
     // control devices
 
@@ -123,8 +141,8 @@ public interface ISmartHousesManager {
      * @throws WrongTypeOfDeviceException       if the device is not a smart bulb
      */
     void smartBulbChangeTone(String tin, String division, int id, Tone tone)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-        ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
 
     /**
      * @param tin      TIN of the proprietary of the smart house
@@ -136,8 +154,8 @@ public interface ISmartHousesManager {
      * @throws WrongTypeOfDeviceException       if the device is not a smart speaker
      */
     void smartSpeakerVolumeDown(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-        ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
 
     /**
      * @param tin      TIN of the proprietary of the smart house
@@ -149,8 +167,8 @@ public interface ISmartHousesManager {
      * @throws WrongTypeOfDeviceException       if the device is not a smart speaker
      */
     void smartSpeakerVolumeUp(String tin, String division, int id)
-        throws DeviceDoesNotExistException, DivisionDoesNotExistException,
-        ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
+            throws DeviceDoesNotExistException, DivisionDoesNotExistException,
+            ProprietaryDoesNotExistException, WrongTypeOfDeviceException;
 
 
     /**
@@ -196,7 +214,7 @@ public interface ISmartHousesManager {
     HashMap<String, List<SmartDevice>> allDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
 
     List<SmartDevice> allDevicesByTinAndDivision(String tin, String division)
-        throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
 
     /**
      * @return a list of all the proprietaries

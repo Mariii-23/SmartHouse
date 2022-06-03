@@ -39,6 +39,14 @@ public class Division implements Serializable {
         smartDevices.add(smartDevice.clone());
     }
 
+    public void turnOffAllDevices() {
+        this.smartDevices.forEach(SmartDevice::switchOff);
+    }
+
+    public void turnOnAllDevices() {
+        this.smartDevices.forEach(SmartDevice::switchOn);
+    }
+
     public void switchDeviceOn(int id) throws DeviceDoesNotExistException {
         try {
             smartDevices.get(id).switchOn();

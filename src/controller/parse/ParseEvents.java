@@ -23,9 +23,9 @@ import java.util.regex.Pattern;
 
 public class ParseEvents {
     public static void fromFile(ISmartHousesManager smartHousesManager, String path)
-        throws IOException, ParseEventException, DeviceDoesNotExistException, ProprietaryDoesNotExistException,
-        DivisionDoesNotExistException, EnergySupplierDoesNotExistException, ClassNotFoundException,
-        WrongTypeOfDeviceException, EnergySupplierAlreadyExistsException, ProprietaryAlreadyExistException {
+            throws IOException, ParseEventException, DeviceDoesNotExistException, ProprietaryDoesNotExistException,
+            DivisionDoesNotExistException, EnergySupplierDoesNotExistException, ClassNotFoundException,
+            WrongTypeOfDeviceException, EnergySupplierAlreadyExistsException, ProprietaryAlreadyExistException {
 
         List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
         Iterator<String> it = lines.iterator();

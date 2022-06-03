@@ -109,29 +109,29 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
 
     @Override
     public void addSmartHouse(SmartHouse smartHouse)
-        throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException {
+            throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException {
         // check if the energy supplier exists
         if (energySuppliers.get(smartHouse.getEnergySupplierName()) == null) {
             throw new EnergySupplierDoesNotExistException("Energy Supplier \"" +
-                smartHouse.getEnergySupplierName() + "\" does not exist");
+                    smartHouse.getEnergySupplierName() + "\" does not exist");
         }
         if (this.smartHousesByTIN.containsKey(smartHouse.getProprietaryTin()))
             throw new ProprietaryAlreadyExistException(
-                "Proprietary with tin " + smartHouse.getProprietaryTin() + " already exists"
+                    "Proprietary with tin " + smartHouse.getProprietaryTin() + " already exists"
             );
         smartHousesByTIN.put(smartHouse.getProprietaryTin(), smartHouse.clone());
     }
 
     @Override
     public void addSmartHouse(String name, String tin, String energySupplier)
-        throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException {
+            throws EnergySupplierDoesNotExistException, ProprietaryAlreadyExistException {
         if (energySuppliers.get(energySupplier) == null) {
             throw new EnergySupplierDoesNotExistException("Energy Supplier \"" +
-                energySupplier + "\" does not exist");
+                    energySupplier + "\" does not exist");
         }
         if (this.smartHousesByTIN.containsKey(tin))
             throw new ProprietaryAlreadyExistException(
-                "Proprietary with tin " + tin + " already exists"
+                    "Proprietary with tin " + tin + " already exists"
             );
         smartHousesByTIN.put(tin, new SmartHouse(new Proprietary(name, tin), energySupplier));
     }
@@ -169,6 +169,20 @@ public class SmartHousesManager implements Serializable, ISmartHousesManager {
     public void turnOffAllHouseDevices(String tin) throws ProprietaryDoesNotExistException {
         SmartHouse smartHouse = this.getSmartHouse(tin);
         smartHouse.turnOffAllDevices();
+    }
+
+    @Override
+    public void turnOffAllHouseDevicesDivision(String tin, String division)
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException {
+        SmartHouse smartHouse = this.getSmartHouse(tin);
+        smartHouse.turnOffAllDevicesDivision(division);
+    }
+
+    @Override
+    public void turnOnAllHouseDevicesDivision(String tin, String division)
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException {
+        SmartHouse smartHouse = this.getSmartHouse(tin);
+        smartHouse.turnOnAllDevicesDivision(division);
     }
 
     @Override

@@ -84,6 +84,22 @@ public class SmartHouse implements Serializable {
         this.divisionsByName.values().forEach(Division::switchDevicesOff);
     }
 
+    public void turnOffAllDevicesDivision(String division)
+            throws DivisionDoesNotExistException {
+        Division div = this.divisionsByName.get(division);
+        if (div == null)
+            throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
+        div.turnOffAllDevices();
+    }
+
+    public void turnOnAllDevicesDivision(String division)
+            throws DivisionDoesNotExistException {
+        Division div = this.divisionsByName.get(division);
+        if (div == null)
+            throw new DivisionDoesNotExistException("Division \"" + division + "\" does not exist");
+        div.turnOnAllDevices();
+    }
+
     public void turnOnDeviceInDivision(String division, int id)
             throws DeviceDoesNotExistException, DivisionDoesNotExistException {
         Division div = this.divisionsByName.get(division);

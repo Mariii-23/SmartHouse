@@ -51,10 +51,10 @@ public class State implements IState {
     }
 
     public void readEventsFromFile(final String filepath)
-        throws IOException, EnergySupplierDoesNotExistException, DeviceDoesNotExistException,
-        ProprietaryDoesNotExistException, DivisionDoesNotExistException, ParseEventException,
-        WrongTypeOfDeviceException, ClassNotFoundException, EnergySupplierAlreadyExistsException,
-        ProprietaryAlreadyExistException {
+            throws IOException, EnergySupplierDoesNotExistException, DeviceDoesNotExistException,
+            ProprietaryDoesNotExistException, DivisionDoesNotExistException, ParseEventException,
+            WrongTypeOfDeviceException, ClassNotFoundException, EnergySupplierAlreadyExistsException,
+            ProprietaryAlreadyExistException {
         ParseEvents.fromFile(this.smartHousesManager, filepath);
     }
 
@@ -170,6 +170,16 @@ public class State implements IState {
     public void turnOnDeviceInDivision(String tin, String division, int id)
             throws DeviceDoesNotExistException, DivisionDoesNotExistException, ProprietaryDoesNotExistException {
         this.smartHousesManager.turnOnDeviceInDivision(tin, division, id);
+    }
+
+    public void turnOffAllHouseDevicesDivision(String tin, String division)
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException {
+        this.smartHousesManager.turnOffAllHouseDevicesDivision(tin, division);
+    }
+
+    public void turnOnAllHouseDevicesDivision(String tin, String division)
+            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException {
+        this.smartHousesManager.turnOnAllHouseDevicesDivision(tin, division);
     }
 
     public Optional<Pair<String, Double>> highestProfitSupplier() {
