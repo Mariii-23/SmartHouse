@@ -3,6 +3,7 @@ package model.smart_house.smart_devices.bulb;
 import model.smart_house.smart_devices.SmartDevice;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class SmartBulb extends SmartDevice implements Serializable {
     private final float diameter;
@@ -58,8 +59,23 @@ public class SmartBulb extends SmartDevice implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append("SmartBulb\n");
         sb.append("Tone :: ").append(tone.toString()).append("\n")
-                .append("Diameter :: ").append(diameter).append("\n");
+            .append("Diameter :: ").append(diameter).append("\n");
         sb.append(super.toString());
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SmartBulb smartBulb)) return false;
+        if (!super.equals(o)) return false;
+        return super.equals(o)
+            && Float.compare(smartBulb.diameter, diameter) == 0
+            && tone == smartBulb.tone;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), diameter, tone);
     }
 }

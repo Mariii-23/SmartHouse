@@ -3,6 +3,7 @@ package model.smart_house.smart_devices.camera;
 import model.smart_house.smart_devices.SmartDevice;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class SmartCamera extends SmartDevice implements Serializable {
     private final int width;
@@ -66,6 +67,22 @@ public class SmartCamera extends SmartDevice implements Serializable {
         sb.append("File Size  :: ").append(fileSize).append("\n");
         sb.append(super.toString());
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SmartCamera that)) return false;
+        if (!super.equals(o)) return false;
+        return super.equals(o)
+            && width == that.width
+            && height == that.height
+            && Float.compare(that.fileSize, fileSize) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), width, height, fileSize);
     }
 }
 

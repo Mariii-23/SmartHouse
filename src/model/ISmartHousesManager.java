@@ -207,14 +207,36 @@ public interface ISmartHousesManager {
      */
     List<Invoice> invoicesByEnergySupplier(String energySupplierName) throws EnergySupplierDoesNotExistException;
 
+    /**
+     * @param startDate the start of the time interval
+     * @param endDate   the end of the time interval
+     * @return a list of pairs containing the name of the energy supplier alongside it's invoice volume, ranked by most volume
+     */
     List<Pair<String, Double>> energySuppliersRankedByInvoiceVolumeBetween(LocalDate startDate, LocalDate endDate);
 
+    /**
+     * @param startDate the start of the time interval
+     * @param endDate   the end of the time interval
+     * @return a list of pairs containing the proprietary alongside it's energy consumption, ranked by most consumption
+     */
     List<Pair<Proprietary, Double>> proprietariesRankedByEnergyConsumptionBetween(LocalDate startDate, LocalDate endDate);
 
+    /**
+     * @param tin TIN of the proprietary of the smart house
+     * @return a map of all the devices in a smart house, aggregated by division
+     * @throws ProprietaryDoesNotExistException if the proprietary does not have a house in the system
+     */
     HashMap<String, List<SmartDevice>> allDevicesByTin(String tin) throws ProprietaryDoesNotExistException;
 
+    /**
+     * @param tin      TIN of the proprietary of the smart house
+     * @param division division where the smart speaker is located
+     * @return a list of all the devices in a division of a smart house
+     * @throws ProprietaryDoesNotExistException if the proprietary does not have a house in the system
+     * @throws DivisionDoesNotExistException    if the division does not exist within the house
+     */
     List<SmartDevice> allDevicesByTinAndDivision(String tin, String division)
-            throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
+        throws ProprietaryDoesNotExistException, DivisionDoesNotExistException;
 
     /**
      * @return a list of all the proprietaries

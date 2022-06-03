@@ -3,6 +3,7 @@ package model.smart_house.smart_devices.speaker;
 import model.smart_house.smart_devices.SmartDevice;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class SmartSpeaker extends SmartDevice implements Serializable {
     public static final int MAX = 100;
@@ -82,5 +83,20 @@ public class SmartSpeaker extends SmartDevice implements Serializable {
         sb.append("Brand :: ").append(brand).append("\n");
         sb.append(super.toString());
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SmartSpeaker that)) return false;
+        if (!super.equals(o)) return false;
+        return super.equals(o) && volume == that.volume
+            && Objects.equals(channel, that.channel)
+            && Objects.equals(brand, that.brand);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), volume, channel, brand);
     }
 }

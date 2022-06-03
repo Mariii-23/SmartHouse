@@ -1,6 +1,7 @@
 package model.smart_house.smart_devices;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public abstract class SmartDevice implements Serializable {
     protected final float fixedConsumption; // kWh / day
@@ -53,5 +54,17 @@ public abstract class SmartDevice implements Serializable {
         sb.append("Fixed Consumption :: ").append(fixedConsumption).append("kWh / day\n");
         sb.append("ON :: ").append(on).append("\n");
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SmartDevice device)) return false;
+        return Float.compare(device.fixedConsumption, fixedConsumption) == 0 && on == device.on;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fixedConsumption, on);
     }
 }

@@ -31,7 +31,7 @@ public class ParseEvents {
         Iterator<String> it = lines.iterator();
         LocalDate simulationDate = smartHousesManager.getDate();
 
-        Pattern pattern = Pattern.compile("(?<date>\\d{4}-\\d{2}-\\d{2})\\s*:\\s*(?<fn>\\w+)\\((?<args>([\\w\\d,]|\\([\\w\\d,]*\\))*)\\)");
+        Pattern pattern = Pattern.compile("(?<date>\\d{4}-\\d{2}-\\d{2})\\s*:\\s*(?<fn>\\w+)\\((?<args>([\\w\\d, ]|\\([\\w\\d,]*\\))*)\\)");
         while (it.hasNext()) {
             String line = it.next();
             Matcher matcher = pattern.matcher(line);
@@ -65,9 +65,13 @@ public class ParseEvents {
 
                     case "turnOnAllHouseDevices" -> smartHousesManager.turnOnAllHouseDevices(args[0]);
 
-                    case "turnOffDeviceInDivision" -> smartHousesManager.turnOffDeviceInDivision(args[0], args[1], Integer.parseInt(args[2]));
+                    case "turnOffDeviceInDivision" -> smartHousesManager.turnOffDeviceInDivision(args[0], args[1], Integer.parseInt(args[2]) - 1);
 
-                    case "turnOnDeviceInDivision" -> smartHousesManager.turnOnDeviceInDivision(args[0], args[1], Integer.parseInt(args[2]));
+                    case "turnOnDeviceInDivision" -> smartHousesManager.turnOnDeviceInDivision(args[0], args[1], Integer.parseInt(args[2]) - 1);
+
+                    case "turnOnAllHouseDevicesDivision" -> smartHousesManager.turnOnAllHouseDevicesDivision(args[0], args[1]);
+
+                    case "turnOffAllHouseDevicesDivision" -> smartHousesManager.turnOffAllHouseDevicesDivision(args[0], args[1]);
 
                     case "smartBulbChangeTone" -> smartHousesManager.smartBulbChangeTone(args[0], args[1], Integer.parseInt(args[2]), Tone.valueOf(args[3].toUpperCase()));
 
