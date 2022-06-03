@@ -484,7 +484,7 @@ public class IO implements IIO {
                 IO.printLine("\n" + division.getKey());
                 int i = 1;
                 for (var device : division.getValue()) {
-                    IO.printLine(i + " :: " + device.getSimpleName());
+                    IO.printLine(i + " :: " + device.getSimpleName() + " :: " + (device.isOn() ? "On" : "Off"));
                     i++;
                 }
             }
@@ -503,7 +503,7 @@ public class IO implements IIO {
             int i = 1;
             IO.printLine("");
             for (var device : result) {
-                IO.printLine(i + " :: " + device.getSimpleName());
+                IO.printLine(i + " :: " + device.getSimpleName() + " :: " + (device.isOn() ? "On" : "Off"));
                 i++;
             }
         } catch (Exception e) {
@@ -662,7 +662,7 @@ public class IO implements IIO {
         int i = 1;
         IO.printLine("");
         for (var device : result) {
-            IO.printLine(i + " :: " + device.getSimpleName());
+            IO.printLine(i + " :: " + device.getSimpleName() + " :: " + (device.isOn() ? "On" : "Off"));
             i++;
         }
 
