@@ -545,7 +545,7 @@ public class IO implements IIO {
         ArrayList<OptionCommand<IO>> list = new ArrayList<>();
         list.add(new OptionCommand<>("Show all proprietaries", IO::showAllProprietaries));
         list.add(new OptionCommand<>("Show all proprietary's devices", IO::showAllDevicesByTin));
-        list.add(new OptionCommand<>("Show all proprietary's devices and division", IO::showAllDevicesByTinAndDivision));
+        list.add(new OptionCommand<>("Show all proprietary's devices in division", IO::showAllDevicesByTinAndDivision));
         list.add(new OptionCommand<>("Show device", IO::showDevice));
         list.add(new OptionCommand<>("Show all energy plans", IO::showAllEnergyPlans));
         list.add(new OptionCommand<>("Show all energy suplliers's name", IO::showAllEnergySuplliersName));
