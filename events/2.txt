@@ -1,0 +1,5 @@
+2022-06-04 : changeEnergyPlan(Muon,Base)
+2022-06-04 : changeEnergySupplierDiscount(Muon,10)
+2022-06-04 : turnOnDeviceInDivision(071131578,Sala de Estar,2)
+2022-06-04 : smartSpeakerVolumeUp(071131578,Sala de Estar,2)
+2022-06-04 : addSmartDeviceToHouse(071131578,Escritorio,SmartBulb(1.5,cold,5))

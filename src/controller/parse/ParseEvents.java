@@ -31,7 +31,7 @@ public class ParseEvents {
         Iterator<String> it = lines.iterator();
         LocalDate simulationDate = smartHousesManager.getDate();
 
-        Pattern pattern = Pattern.compile("(?<date>\\d{4}-\\d{2}-\\d{2})\\s*:\\s*(?<fn>\\w+)\\((?<args>([\\w\\d, ]|\\([\\w\\d,]*\\))*)\\)");
+        Pattern pattern = Pattern.compile("(?<date>\\d{4}-\\d{2}-\\d{2})\\s*:\\s*(?<fn>\\w+)\\((?<args>([\\w\\d,. ]|\\([\\w\\d,. ]*\\))*)\\)");
         while (it.hasNext()) {
             String line = it.next();
             Matcher matcher = pattern.matcher(line);
@@ -59,7 +59,7 @@ public class ParseEvents {
 
                     case "addSmartHouse" -> smartHousesManager.addSmartHouse(args[0], args[1], args[2]);
 
-                    case "addSmartDeviceToHouse" -> smartHousesManager.addSmartDeviceToHouse(args[0], args[1], parseSmartDevice(args[2]));
+                    case "addSmartDeviceToHouse" -> smartHousesManager.addSmartDeviceToHouse(args[0], args[1], parseSmartDevice(matcher.group("args")));
 
                     case "turnOffAllHouseDevices" -> smartHousesManager.turnOffAllHouseDevices(args[0]);
 
@@ -73,11 +73,11 @@ public class ParseEvents {
 
                     case "turnOffAllHouseDevicesDivision" -> smartHousesManager.turnOffAllHouseDevicesDivision(args[0], args[1]);
 
-                    case "smartBulbChangeTone" -> smartHousesManager.smartBulbChangeTone(args[0], args[1], Integer.parseInt(args[2]), Tone.valueOf(args[3].toUpperCase()));
+                    case "smartBulbChangeTone" -> smartHousesManager.smartBulbChangeTone(args[0], args[1], Integer.parseInt(args[2]) - 1, Tone.valueOf(args[3].toUpperCase()));
 
-                    case "smartSpeakerVolumeDown" -> smartHousesManager.smartSpeakerVolumeDown(args[0], args[1], Integer.parseInt(args[2]));
+                    case "smartSpeakerVolumeDown" -> smartHousesManager.smartSpeakerVolumeDown(args[0], args[1], Integer.parseInt(args[2]) - 1);
 
-                    case "smartSpeakerVolumeUp" -> smartHousesManager.smartSpeakerVolumeUp(args[0], args[1], Integer.parseInt(args[2]));
+                    case "smartSpeakerVolumeUp" -> smartHousesManager.smartSpeakerVolumeUp(args[0], args[1], Integer.parseInt(args[2]) - 1);
 
                     default -> throw new FunctionNotDefinedException("Function " + functionName + " is not defined");
                 }
@@ -90,9 +90,10 @@ public class ParseEvents {
     }
 
     private static SmartDevice parseSmartDevice(String str) throws ParseEventException {
-        Pattern pattern = Pattern.compile("(?<sd>\\w+)\\((?<args>[\\w\\d,]*)\\)");
+        Pattern pattern = Pattern.compile("(?<sd>\\w+)\\((?<args>[\\w\\d,. ]*)\\)");
         Matcher matcher = pattern.matcher(str);
-        if (!matcher.matches()) {
+        if (!matcher.find()) {
+            System.out.println(str);
             throw new FunctionErrorParsingArgumentException("Error parsing Smart Device");
         }
         String ctorName = matcher.group("sd");
@@ -100,9 +101,9 @@ public class ParseEvents {
         try {
             return switch (ctorName) {
                 case "SmartBulb" -> new SmartBulb(
-                        Float.parseFloat(args[0]),
-                        Tone.valueOf(args[1].toUpperCase()),
-                        Float.parseFloat(args[2])
+                    Float.parseFloat(args[0]),
+                    Tone.valueOf(args[1].toUpperCase()),
+                    Float.parseFloat(args[2])
                 );
                 case "SmartSpeaker" -> new SmartSpeaker(
                         Float.parseFloat(args[0]),

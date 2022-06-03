@@ -1,0 +1,3 @@
+2022-06-03 : turnOnAllHouseDevices(071131578)
+2022-06-03 : turnOffAllHouseDevicesDivision(071131578,Sala de Estar)
+2022-06-03 : turnOnDeviceInDivision(071131578,Sala de Estar,1)
